@@ -21,11 +21,17 @@ const client = new Discord.Client(); // init discord api client
 
 // --- --- --- --- --- --- --- ---
 
+client.on('ready', () => {
+  console.log("CONNECTED");
+  client.user.setPresence({ status: 'dnd' });
+});
 
+client.on('disconnect', (errMsg, code) => {
+  console.log("DISCONNECTED");
+  client.connect();
+});
 
 // --- --- --- --- --- --- --- ---
 
 client.login(process.env.BOT_TOKEN); // login to discord api
-setInterval(function(){
-  http.get("http://cummy2.herokuapp.com");
-},300000); // make sure dyno doesn't fall asleep
+setInterval(function(){ http.get("http://cummy2.herokuapp.com"); },300000); // make sure dyno doesn't fall asleep
