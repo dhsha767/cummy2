@@ -23,7 +23,7 @@ const client = new Discord.Client(); // init discord api client
 
 client.on('ready', () => {
   console.log("CONNECTED");
-  client.user.setPresence({ status: 'dnd' });
+  client.user.setPresence({ status: 'idle', game: {type: 'LISTENING', name: 'to Gitti VOs'}, afk: false, });
 });
 
 client.on('disconnect', (errMsg, code) => {
