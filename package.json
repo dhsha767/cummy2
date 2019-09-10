@@ -1,0 +1,13 @@
+{
+  "name":"Cummy 2.0",
+  "version":"69",
+  "description":"lul",
+  "main":"bot.js",
+  "author":"me",
+  "dependencies":{
+    "discord.js":"^11.4.2",
+    "pg":"^7.0.0",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2"
+  }
+}
