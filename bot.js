@@ -88,7 +88,7 @@ function hk_messageDelete(message) {
   console.log(message);
   
   message.reactions.forEach((reaction) => {
-    console.log('a');
+    console.log(reaction);
     reaction.users.forEach((user) => {
       console.log('b');
       hk_messageReaction(reaction, user, false); // remove each reaction
@@ -102,7 +102,6 @@ function hk_messageReaction(messageReaction, user, add) {
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
-    console.log(messageReaction.emoji.name);
     if (VOTE.name == messageReaction.emoji.name) { // we have a match
       if (add)
         console.log('karma + ' + VOTE.value);
