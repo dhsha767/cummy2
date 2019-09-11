@@ -25,8 +25,9 @@ const VOTES = [ // {emoji id, value, reacted by default}
   {id:'💍', value:100, default:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
-const COMMANDS = [ // {name, handler func}
-  {name:'karma', func:getKarma}
+const COMMANDS = [ // {regex, handler function}
+  {regex:/help$/, handler:handle_help}, // help docs
+  {regex:/karma( [\S]+)?$/, handler:handle_karma} // check karma
 ];
 
 // --- --- --- INITS --- --- ---
@@ -37,15 +38,20 @@ const pgClient = new PGClient({ // init postgresql client
 pgClient.connect(); // connect to db
 const client = new Discord.Client(); // init discord api client
 client.login(process.env.BOT_TOKEN); // login to discord api
-setInterval(function() {
+setInterval(() => {
   http.get(KEEPALIVE_URL);
 }, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep
 
 // --- --- --- FUNCS --- --- ---
 
-function getKarma()
+function handle_help(message)
 {
-  console.log("GETKARMA");
+  console.log('handle_help: ' + message);
+}
+
+function handle_karma(message)
+{
+  console.log('handle_karma: ' + message);
 }
 
 // --- --- --- HOOKS --- --- ---
@@ -57,9 +63,15 @@ client.on('ready', () => {
 
 client.on('message', (message) => {
   console.log("MESSAGE");
-  if (message.content == '!karma')
+  if (message.author.bot) return; // sent by bot
+  console.log(message.guild);
+  if (message.content.startsWith(COMMAND_PREFIX)) // we may be dealing with a command
   {
-    COMMANDS[0].func();
+    COMMANDS.forEach((COMMAND) => {
+      if (message.content.match(COMMAND.regex).length == 1) { // we have a match
+       COMMAND.handler(message); 
+      }
+    });
   }
 });
 
