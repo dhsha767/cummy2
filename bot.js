@@ -19,8 +19,8 @@ const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound 
 const VOTES = [ // {emoji id, value, reacted by default}
   {id:'👎', value:-1, isDefault:true},
   {id:'👍', value:1, isDefault:true},
-  {id:'🔥', value:5, isDefault:true},
-  {id:'😳', value:10, isDefault:true},
+  {id:'🔥', value:5, isDefault:false},
+  {id:'😳', value:10, isDefault:false},
   {id:'🙈', value:25, isDefault:false},
   {id:'💍', value:100, isDefault:false}
 ];
@@ -86,10 +86,16 @@ function hk_message(message) {
 function hk_messageDelete(message) {
 }
 
-function hk_messageReactionAdd(messageReaction, user) {
-}
-
-function hk_messageReactionRemove(messageReaction, user) {
+function hk_messageReaction(messageReaction, user, add) {
+  if (messageReaction.me) return; // ignore reactions from cummy
+  VOTES.forEach((VOTE) => { // check if reaction is a vote
+    if (VOTE.id == messageReaction.emoji.id) { // we have a match
+      if (add)
+        console.log('karma + ' + VOTE.value);
+      else
+        console.log('karma - ' + VOTE.value);
+    }
+  });
 }
 
 function hk_disconnect(event) {
@@ -101,6 +107,6 @@ function hk_disconnect(event) {
 client.on('ready', () => hk_ready());
 client.on('message', (message) => hk_message(message));
 client.on('messageDelete', (message) => hk_messageDelete(message));
-client.on('messageReactionAdd', (messageReaction, user) => hk_messageReactionAdd(messageReaction, user));
-client.on('messageReactionRemove', (messageReaction, user) => hk_messageReactionRemove(messageReaction, user));
+client.on('messageReactionAdd', (messageReaction, user) => hk_messageReaction(messageReaction, user, true));
+client.on('messageReactionRemove', (messageReaction, user) => hk_messageReaction(messageReaction, user, false));
 client.on('disconnect', (event) => hk_disconnect(event));
