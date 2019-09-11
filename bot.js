@@ -58,15 +58,14 @@ function cmd_karma(message) {
 function hk_ready() {
   console.log("READY");
   client.user.setPresence(PRESENCE); // set bot presence
-  client.channels.forEach((channel) => { if (channel.type == 'text') channel.fetchMessages(); }); // listen to old messages
+  client.channels.forEach((channel) => { if (channel.type == 'text') channel.fetchMessages(); }); // cache all the old messages
 }
 
 function hk_message(message) {
   if (message.author.id == client.user.id) return; // ignore own messages
-  if (message.system) return; // ignore message sent by discord
+  if (message.system) return; // ignore messages sent by discord
   
-  if (message.content.startsWith(COMMAND_PREFIX)) // we may be dealing with a command
-  {
+  if (message.content.startsWith(COMMAND_PREFIX)) { // we may be dealing with a command
     COMMANDS.forEach((COMMAND) => {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
         if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
@@ -75,8 +74,8 @@ function hk_message(message) {
     });
   }
   
-  if (message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null)
-  { // this classifies as a meme! (has embed OR has attachment OR has url)
+  if (message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null) {
+    // this classifies as a meme! (has embed OR has attachment OR has url)
     VOTES.forEach((VOTE) => { // react with default votes
       if (VOTE.isDefault) message.react(VOTE.id);
     });
