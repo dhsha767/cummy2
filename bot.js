@@ -36,8 +36,10 @@ const pgClient = new PGClient({ // init postgresql client
   connectionString: process.env.DATABASE_URL,
 });
 pgClient.connect(); // connect to db
+
 const client = new Discord.Client(); // init discord api client
 client.login(process.env.BOT_TOKEN); // login to discord api
+
 setInterval(() => {
   http.get(KEEPALIVE_URL);
 }, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep
@@ -45,48 +47,47 @@ setInterval(() => {
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
-  console.log('handle_help: ' + message);
 }
 
 function cmd_karma(message) {
-  console.log('handle_karma: ' + message);
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
 
 function hk_ready() {
-  console.log("READY");
   client.user.setPresence(PRESENCE);
 }
 
 function hk_message(message) {
-  console.log("MESSAGE");
   if (message.author.id == client.user.id) return; // ignore own messages
+  if (message.system) return; // ignore message sent by discord
+  
   if (message.content.startsWith(COMMAND_PREFIX)) // we may be dealing with a command
   {
     COMMANDS.forEach((COMMAND) => {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
         if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
-        COMMAND.handler(message); 
+        COMMAND.handler(message); // call the commands' handler function
       }
     });
+  }
+  
+  if (message.embeds.length != null || message.attachments != null) // counts as a meme
+  {
+    console.log('meme');
   }
 }
 
 function hk_messageDelete(message) {
-  console.log("MESSAGEDELETE");
 }
 
 function hk_messageReactionAdd(messageReaction, user) {
-  console.log("MESSAGEREACTIONADD");
 }
 
 function hk_messageReactionRemove(messageReaction, user) {
-  console.log("MESSAGEREACTIONREMOVE");
 }
 
 function hk_disconnect(event) {
-  console.log("DISCONNECT");
   client.connect();
 }
 
