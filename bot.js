@@ -58,7 +58,7 @@ function cmd_karma(message) {
 function hk_ready() {
   console.log("READY");
   client.user.setPresence(PRESENCE); // set bot presence
-  client.channels.forEach((channel) => { if (channel.type == 'text') channel.fetchMessages(); }); // cache all the old messages
+  //client.channels.forEach((channel) => { if (channel.type == 'text') channel.fetchMessages(); }); // cache all the old messages
 }
 
 function hk_message(message) {
@@ -82,20 +82,6 @@ function hk_message(message) {
   }
 }
 
-function hk_messageDelete(message) {
-  if (message.channel.type == 'dm') return; // ignore dm messages
-
-  console.log(message);
-  
-  message.reactions.forEach((reaction) => {
-    console.log(reaction);
-    reaction.users.forEach((user) => {
-      console.log('b');
-      hk_messageReaction(reaction, user, false); // remove each reaction
-    });
-  });
-}
-
 function hk_messageReaction(messageReaction, user, add) {
   if (user.id == client.user.id) return; // ignore reactions from cummy
   //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author
@@ -104,9 +90,9 @@ function hk_messageReaction(messageReaction, user, add) {
   VOTES.forEach((VOTE) => { // check if reaction is a vote
     if (VOTE.name == messageReaction.emoji.name) { // we have a match
       if (add)
-        console.log('karma + ' + VOTE.value);
+        console.log('karma add ' + VOTE.value);
       else
-        console.log('karma - ' + VOTE.value);
+        console.log('karma remove ' + VOTE.value);
     }
   });
 }
@@ -117,24 +103,23 @@ function hk_disconnect(event) {
 
 function hk_raw(packet) { 
   // see https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/coding-guides/raw-events.md
-  if (!['MESSAGE_DELETE', 'MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
+  if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
   const channel = client.channels.get(packet.d.channel_id);
-  channel.fetchMessage(packet.t === 'MESSAGE_DELETE' ? packet.d.id : packet.d.message_id).then(message => {
-    if (packet.t === 'MESSAGE_DELETE') {
-      hk_messageDelete(message);
-    }
-    else {
-      const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-      const reaction = message.reactions.get(emoji);
-      if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
-      hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
-    }
+  channel.fetchMessage(packet.d.message_id).then(message => {
+    const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
+    const reaction = message.reactions.get(emoji);
+    if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
+    hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
   });
 }
 
 // --- --- --- HOOKS --- --- ---
 
-client.on('ready', () => hk_ready());
-client.on('disconnect', (event) => hk_disconnect(event));
-client.on('message', (message) => hk_message(message));
-client.on('raw', (packet) => hk_raw(packet)); // to make sure we handle events on cached messages
+client.on('ready', () => hk_ready()); // when the bot is connected and ready to work
+client.on('disconnect', (event) => hk_disconnect(event)); // reconnect when disconnected for whatever reason
+client.on('message', (message) => hk_message(message)); 
+/* we can't handle message deletes, because the reaction users are not
+   listed (at least not on uncached messages, which could lead to an exploit where people 
+   react negatively to their own messages, then delete them and gain free karma. at the same time
+   creating new karma in a closed system out of nowhere */
+client.on('raw', (packet) => hk_raw(packet)); // to make sure we handle reactions on uncached messages
