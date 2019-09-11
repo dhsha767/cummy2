@@ -25,7 +25,7 @@ const VOTES = [ // {emoji id, value, reacted by default}
   {id:'💍', value:100, default:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
-const COMMANDS [ // {name, handler func}
+const COMMANDS = [ // {name, handler func}
   {name:'karma', func:getKarma}
 ];
 
