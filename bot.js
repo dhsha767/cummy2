@@ -19,8 +19,8 @@ const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound 
 const VOTES = [ // {emoji id, value, reacted by default}
   {id:'👎', value:-1, isDefault:true},
   {id:'👍', value:1, isDefault:true},
-  {id:'🔥', value:5, isDefault:false},
-  {id:'😳', value:10, isDefault:false},
+  {id:'🔥', value:5, isDefault:true},
+  {id:'😳', value:10, isDefault:true},
   {id:'🙈', value:25, isDefault:false},
   {id:'💍', value:100, isDefault:false}
 ];
