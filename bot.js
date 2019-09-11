@@ -110,12 +110,11 @@ function hk_raw(packet) { // to make sure we don't miss events which wouldn't be
   if (!['MESSAGE_DELETE', 'MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
   console.log(packet);
   const channel = client.channels.get(packet.d.channel_id);
-  channel.fetchMessage(packet.d.message_id).then(message => {
+  channel.fetchMessage(packet.t === 'MESSAGE_DELETE' ? packet.d.id : packet.d.message_id).then(message => {
     if (packet.t === 'MESSAGE_DELETE') {
       hk_messageDelete(message);
     }
-    else
-    {
+    else {
       const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
       const reaction = message.reactions.get(emoji);
       if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
