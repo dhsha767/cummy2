@@ -108,6 +108,7 @@ function hk_disconnect(event) {
 function hk_raw(packet) { // to make sure we don't miss events which wouldn't be fired usually
   // see https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/coding-guides/raw-events.md
   if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
+  console.log(packet);
   const channel = client.channels.get(packet.d.channel_id);
   if (channel.messages.has(packet.d.message_id)) return;
   channel.fetchMessage(packet.d.message_id).then(message => {
