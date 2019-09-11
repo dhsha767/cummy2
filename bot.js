@@ -42,52 +42,59 @@ setInterval(() => {
   http.get(KEEPALIVE_URL);
 }, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep
 
-// --- --- --- FUNCS --- --- ---
+// --- --- --- CMD FUNCS --- --- ---
 
-function handle_help(message)
-{
+function cmd_help(message) {
   console.log('handle_help: ' + message);
 }
 
-function handle_karma(message)
-{
+function cmd_karma(message) {
   console.log('handle_karma: ' + message);
 }
 
-// --- --- --- HOOKS --- --- ---
+// --- --- --- HOOK FUNCS --- --- ---
 
-client.on('ready', () => {
-  console.log("CONNECTED");
+function hk_ready() {
+  console.log("READY");
   client.user.setPresence(PRESENCE);
-});
+}
 
-client.on('message', (message) => {
+function hk_message(message) {
   console.log("MESSAGE");
   if (message.author.bot) return; // sent by bot
-  console.log(message.guild);
+  if (message.guild == null) return; // sent in dms
   if (message.content.startsWith(COMMAND_PREFIX)) // we may be dealing with a command
   {
     COMMANDS.forEach((COMMAND) => {
-      if (message.content.match(COMMAND.regex).length == 1) { // we have a match
+      if (message.content.match(COMMAND.regex) != 1) { // we have a match
        COMMAND.handler(message); 
       }
     });
   }
-});
+}
 
-client.on('messageDelete', (message) => {
+function hk_messageDelete(message) {
   console.log("MESSAGEDELETE");
-});
+}
 
-client.on('messageReactionAdd', (messageReaction, user) => {
+function hk_messageReactionAdd(messageReaction, user) {
   console.log("MESSAGEREACTIONADD");
-});
+}
 
-client.on('messageReactionRemove', (messageReaction, user) => {
+function hk_messageReactionRemove(messageReaction, user) {
   console.log("MESSAGEREACTIONREMOVE");
-});
+}
 
-client.on('disconnect', (event) => {
-  console.log("DISCONNECTED");
+function hk_disconnect(event) {
+  console.log("DISCONNECT");
   client.connect();
-});
+}
+
+// --- --- --- HOOKS --- --- ---
+
+client.on('ready', hk_ready);
+client.on('message', hk_message(message));
+client.on('messageDelete', hk_messageDelete(message));
+client.on('messageReactionAdd', hk_messageReactionAdd(messageReaction, user));
+client.on('messageReactionRemove', hk_messageReactionRemove(messageReaction, user));
+client.on('disconnect', hk_disconnect(event));
