@@ -84,6 +84,8 @@ function hk_message(message) {
 
 function hk_messageDelete(message) {
   if (message.channel.type == 'dm') return; // ignore dm messages
+
+  console.log(message);
  
   message.reactions.forEach((reaction) => {
     reaction.users.forEach((user) => {
