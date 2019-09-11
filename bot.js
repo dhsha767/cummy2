@@ -127,11 +127,11 @@ function hk_raw(packet) {  // see https://github.com/AnIdiotsGuide/discordjs-bot
   if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
   const channel = client.channels.get(packet.d.channel_id);
   channel.fetchMessage(packet.d.message_id).then(message => {
+    console.log(message);
     const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-    message.reactions.get(emoji).then(reaction => {
-      if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
-      hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
-    });
+    const reaction = message.reactions.get(emoji);
+    if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
+    hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
   });
 }
 
