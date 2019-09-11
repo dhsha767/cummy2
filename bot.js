@@ -17,12 +17,12 @@ const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound System Dreamscape (HD)'}}; // type PresenceData
 const VOTES = [ // {emoji id, value, reacted by default}
-  {id:'👎', value:-1, default:true},
-  {id:'👍', value:1, default:true},
-  {id:'🔥', value:5, default:false},
-  {id:'😳', value:10, default:false},
-  {id:'🙈', value:25, default:false},
-  {id:'💍', value:100, default:false}
+  {id:'👎', value:-1, isDefault:true},
+  {id:'👍', value:1, isDefault:true},
+  {id:'🔥', value:5, isDefault:false},
+  {id:'😳', value:10, isDefault:false},
+  {id:'🙈', value:25, isDefault:false},
+  {id:'💍', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
@@ -57,7 +57,8 @@ function cmd_karma(message) {
 
 function hk_ready() {
   console.log("READY");
-  client.user.setPresence(PRESENCE);
+  client.user.setPresence(PRESENCE); // set bot presence
+  client.channels.forEach((channel) => { if (channel.type == 'text') channel.fetchMessages(); }); // listen to old messages
 }
 
 function hk_message(message) {
@@ -74,10 +75,11 @@ function hk_message(message) {
     });
   }
   
-  console.log(message);
   if (message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null)
   { // this classifies as a meme! (has embed OR has attachment OR has url)
-    console.log('this is a meme');
+    VOTES.forEach((VOTE) => { // react with default votes
+      if (VOTE.isDefault) message.react(VOTE.id);
+    });
   }
 }
 
