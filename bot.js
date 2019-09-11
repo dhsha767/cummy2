@@ -28,7 +28,7 @@ const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
   {regex:/^help$/, handler:cmd_help, onlyInGuild:false}, // help docs
   {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false}, // check karma
-  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false} // send karma to another user
+  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false} // send karma to another user (by username)
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 
@@ -46,6 +46,12 @@ setInterval(() => {
   http.get(KEEPALIVE_URL);
 }, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep
 
+// --- --- --- HELPER FUNCS --- --- ---
+
+function sendKarma(sender, reciever, amount) {
+  console.log(sender.username + "->" + reciever.username + " : " + amount);
+}
+
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
@@ -55,7 +61,16 @@ function cmd_karma(message) {
 }
 
 function cmd_sendkarma(message) {
-  console.log('sendkarma');
+  var args = message.content.split(' ');
+  var reciever_username = args[1].toLowerCase();
+  var reciever_userObj = null;
+  var amount = parseInt(args[2]);
+  message.channel.guild.members.forEach((member) => { // search for reciever by username (arg1)
+    if (member.user.username.toLowerCase().startsWith(reciever_username)) { // match
+      reciever_userObj = member.user;
+    }
+  });
+  if (reciever_userObj != null) sendKarma(message.author, reciever_userObj, amount);
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
@@ -93,10 +108,8 @@ function hk_messageReaction(messageReaction, user, add) {
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
     if (VOTE.name == messageReaction.emoji.name) { // we have a match!
-      if (add)
-        console.log('karma add ' + VOTE.value);
-      else
-        console.log('karma remove ' + VOTE.value);
+      if (add) sendKarma(user, messageReaction.message.author, VOTE.value);
+      else sendKarma(messageReaction.message.author, user, VOTE.value);
     }
   });
 }
