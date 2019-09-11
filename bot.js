@@ -89,7 +89,6 @@ function hk_message(message) {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
         if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
         COMMAND.handler(message); // call the commands' handler function
-        break;
       }
     });
   }
@@ -116,7 +115,6 @@ function hk_messageReaction(messageReaction, user, add) {
       else { // downvote logic
         
       }
-      break;
     }
   });
 }
