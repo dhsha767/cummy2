@@ -25,9 +25,9 @@ const VOTES = [ // {emoji id, value, reacted by default}
   {id:'💍', value:100, default:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
-const COMMANDS = [ // {regex, handler function}
-  {regex:/^help$/, handler:cmd_help}, // help docs
-  {regex:/^karma( [\S]+)?$/, handler:cmd_karma} // check karma
+const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
+  {regex:/^help$/, handler:cmd_help, onlyInGuild:true}, // help docs
+  {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:true} // check karma
 ];
 
 // --- --- --- INITS --- --- ---
@@ -61,13 +61,13 @@ function hk_ready() {
 
 function hk_message(message) {
   console.log("MESSAGE");
-  if (message.author.bot) return; // sent by bot
-  if (message.guild == null) return; // sent in dms
+  if (message.author.id == client.user.id) return; // ignore own messages
   if (message.content.startsWith(COMMAND_PREFIX)) // we may be dealing with a command
   {
     COMMANDS.forEach((COMMAND) => {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
-       COMMAND.handler(message); 
+        if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
+        COMMAND.handler(message); 
       }
     });
   }
