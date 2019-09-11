@@ -26,8 +26,9 @@ const VOTES = [ // {emoji name, value, reacted by default}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
-  {regex:/^help$/, handler:cmd_help, onlyInGuild:true}, // help docs
-  {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:true} // check karma
+  {regex:/^help$/, handler:cmd_help, onlyInGuild:false}, // help docs
+  {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false}, // check karma
+  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false} // send karma to another user
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 
@@ -53,12 +54,15 @@ function cmd_help(message) {
 function cmd_karma(message) {
 }
 
+function cmd_sendkarma(message) {
+  console.log('sendkarma');
+}
+
 // --- --- --- HOOK FUNCS --- --- ---
 
 function hk_ready() {
   console.log("READY");
   client.user.setPresence(PRESENCE); // set bot presence
-  //client.channels.forEach((channel) => { if (channel.type == 'text') channel.fetchMessages(); }); // cache all the old messages
 }
 
 function hk_message(message) {
@@ -84,11 +88,11 @@ function hk_message(message) {
 
 function hk_messageReaction(messageReaction, user, add) {
   if (user.id == client.user.id) return; // ignore reactions from cummy
-  //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author
+  //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author (DISABLED FOR TESTING)
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
-    if (VOTE.name == messageReaction.emoji.name) { // we have a match
+    if (VOTE.name == messageReaction.emoji.name) { // we have a match!
       if (add)
         console.log('karma add ' + VOTE.value);
       else
@@ -101,8 +105,7 @@ function hk_disconnect(event) {
   client.connect();
 }
 
-function hk_raw(packet) { 
-  // see https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/coding-guides/raw-events.md
+function hk_raw(packet) {  // see https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/coding-guides/raw-events.md
   if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
   const channel = client.channels.get(packet.d.channel_id);
   channel.fetchMessage(packet.d.message_id).then(message => {
@@ -120,6 +123,6 @@ client.on('disconnect', (event) => hk_disconnect(event)); // reconnect when disc
 client.on('message', (message) => hk_message(message)); 
 /* we can't handle message deletes, because the reaction users are not
    listed (at least not on uncached messages, which could lead to an exploit where people 
-   react negatively to their own messages, then delete them and gain free karma. at the same time
-   creating new karma in a closed system out of nowhere */
+   react negatively to their own (old) messages, delete them and gain free karma, at the same time
+   creating new karma in a closed system out of nowhere. :( */
 client.on('raw', (packet) => hk_raw(packet)); // to make sure we handle reactions on uncached messages
