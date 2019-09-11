@@ -13,6 +13,7 @@ const http = require('http'); // http requests (for the heartbeat)
 
 // --- --- --- VARS --- --- ---
 
+const HELP_URL = "https://github.com/bmdyy/cummy2/blob/master/readme.md";
 const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound System Dreamscape (HD)'}}; // type PresenceData
@@ -49,15 +50,19 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function sendKarma(sender, reciever, amount) {
-  console.log(sender.username + "#" + sender.discriminator + "->" + reciever.username + "#" + reciever.discriminator + " : " + amount);
+  // query sender karma -amount
+  // query reciever karma +amount
+  // query log transaction
 }
 
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
+  message.channel.send(HELP_URL);
 }
 
 function cmd_karma(message) {
+  message.channel.send('x has y karma');
 }
 
 function cmd_sendkarma(message) {
@@ -78,7 +83,7 @@ function cmd_sendkarma(message) {
 function hk_ready() {
   console.log("READY");
   client.user.setPresence(PRESENCE); // set bot presence
-  client.channels.forEach((chan) => { if (chan.type == 'text') chan.fetchMessages(); });
+  client.channels.forEach((chan) => { if (chan.type == 'text') chan.fetchMessages(); }); // cache old messages
 }
 
 function hk_message(message) {
@@ -104,7 +109,7 @@ function hk_message(message) {
 
 function hk_messageReaction(messageReaction, user, add) {
   if (user.id == client.user.id) return; // ignore reactions from cummy
-  //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author (DISABLED FOR TESTING)
+  if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
