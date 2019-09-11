@@ -32,6 +32,7 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
   {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false} // send karma to another user (by username)
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
+const GUILD_ID = 621071935329140778;
 
 // --- --- --- INITS --- --- ---
 
@@ -58,6 +59,16 @@ function sendKarma(sender, reciever, amount) {
   });
 }
 
+function findUser(username) { // searches for user by username and returns User object (or null)
+  var userObj = null;
+  client.guilds.find(GUILD_ID).members.forEach((member) => { // search for reciever by username (arg[1])
+    if (member.user.username.toLowerCase().startsWith(username)) { // match
+      userObj = member.user;
+    }
+  });
+  return userObj;
+}
+
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
@@ -65,20 +76,19 @@ function cmd_help(message) {
 }
 
 function cmd_karma(message) {
-  message.channel.send('x has y karma');
+  var target = message.author;
+  var args = message.split(' ');
+  if (args > 1) target = findUser(args[1]); // specified user to check
+  pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
+    message.channel.send(target.);
+  });
 }
 
 function cmd_sendkarma(message) {
   var args = message.content.split(' ');
-  var reciever_username = args[1].toLowerCase();
-  var reciever_userObj = null;
+  var reciever_userObj = findUser(args[1].toLowerCase());
   var amount = parseInt(args[2]);
-  message.channel.guild.members.forEach((member) => { // search for reciever by username (arg[1])
-    if (member.user.username.toLowerCase().startsWith(reciever_username)) { // match
-      reciever_userObj = member.user;
-    }
-  });
-  sendKarma(message.author, reciever_userObj, amount);
+  if (reciever_userObj != null) sendKarma(message.author, reciever_userObj, amount);
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
