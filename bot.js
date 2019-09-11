@@ -84,6 +84,7 @@ function hk_message(message) {
 }
 
 function hk_messageDelete(message) {
+  console.log(message);
 }
 
 function hk_messageReaction(messageReaction, user, add) {
