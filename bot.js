@@ -111,10 +111,16 @@ function hk_raw(packet) { // to make sure we don't miss events which wouldn't be
   console.log(packet);
   const channel = client.channels.get(packet.d.channel_id);
   channel.fetchMessage(packet.d.message_id).then(message => {
-    const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-    const reaction = message.reactions.get(emoji);
-    if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
-    hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
+    if (packet.t === 'MESSAGE_DELETE') {
+      hk_messageDelete(message);
+    }
+    else
+    {
+      const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
+      const reaction = message.reactions.get(emoji);
+      if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
+      hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
+    }
   });
 }
 
