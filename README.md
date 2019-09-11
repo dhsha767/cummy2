@@ -28,3 +28,7 @@ _usage:_ `!compare <req:username> <opt:username>` <br>
 Cummy2 returns an embed with information about both users side by side. If the second username isn't specified then the user is compared to the sender.
 
 ###### _\<opt:...\> indicates an optional parameter, \<req:...\> indicates a required parameter_
+
+## API
+
+_To-Do_
