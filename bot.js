@@ -88,7 +88,7 @@ function hk_messageDelete(message) {
 
 function hk_messageReaction(messageReaction, user, add) {
   if (user.id == client.user.id) return; // ignore reactions from cummy
-  if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author
+  //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
