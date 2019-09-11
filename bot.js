@@ -92,7 +92,7 @@ function hk_messageReaction(messageReaction, user, add) {
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
-    console.log(messageReaction.emoji.id);
+    console.log(messageReaction.emoji);
     if (VOTE.id == messageReaction.emoji.id) { // we have a match
       if (add)
         console.log('karma + ' + VOTE.value);
