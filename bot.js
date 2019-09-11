@@ -73,10 +73,7 @@ function hk_message(message) {
     });
   }
   
-  if (message.embeds.length > 0 || message.attachments != null) // counts as a meme
-  {
-    console.log('meme');
-  }
+  console.log(message);
 }
 
 function hk_messageDelete(message) {
