@@ -29,6 +29,7 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
   {regex:/^help$/, handler:cmd_help, onlyInGuild:true}, // help docs
   {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:true} // check karma
 ];
+const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 
 // --- --- --- INITS --- --- ---
 
@@ -74,6 +75,10 @@ function hk_message(message) {
   }
   
   console.log(message);
+  if (message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null)
+  { // this classifies as a meme! (has embed OR has attachment OR has url)
+    console.log('this is a meme');
+  }
 }
 
 function hk_messageDelete(message) {
