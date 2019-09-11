@@ -55,6 +55,7 @@ function cmd_karma(message) {
 // --- --- --- HOOK FUNCS --- --- ---
 
 function hk_ready() {
+  console.log("READY");
   client.user.setPresence(PRESENCE);
 }
 
@@ -72,7 +73,7 @@ function hk_message(message) {
     });
   }
   
-  if (message.embeds.length != null || message.attachments != null) // counts as a meme
+  if (message.embeds.length > 0 || message.attachments != null) // counts as a meme
   {
     console.log('meme');
   }
