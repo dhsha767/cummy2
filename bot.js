@@ -13,9 +13,21 @@ const http = require('http'); // http requests (for the heartbeat)
 
 // --- --- --- VARS --- --- ---
 
-const keepAlive_url = "http://cummy2.herokuapp.com"; // url to ping cummy
-const keepAlive_interval = 5 * 60 * 1000; // in milliseconds
-const presence = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound System Dreamscape (HD)'}}; // type PresenceData
+const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
+const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
+const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound System Dreamscape (HD)'}}; // type PresenceData
+const VOTES = [ // {emoji id, value, reacted by default}
+  {id:'👎', value:-1, default:true},
+  {id:'👍', value:1, default:true},
+  {id:'🔥', value:5, default:false},
+  {id:'😳', value:10, default:false},
+  {id:'🙈', value:25, default:false},
+  {id:'💍', value:100, default:false}
+];
+const COMMAND_PREFIX = '!'; // appears before commands
+const COMMANDS [ // {name, handler func}
+  {name:'karma', func:getKarma}
+];
 
 // --- --- --- INITS --- --- ---
 
@@ -26,20 +38,29 @@ pgClient.connect(); // connect to db
 const client = new Discord.Client(); // init discord api client
 client.login(process.env.BOT_TOKEN); // login to discord api
 setInterval(function() {
-  http.get(keepAlive_url);
-}, keepAlive_interval); // make sure dyno doesn't fall asleep
+  http.get(KEEPALIVE_URL);
+}, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep
 
 // --- --- --- FUNCS --- --- ---
+
+function getKarma()
+{
+  console.log("GETKARMA");
+}
 
 // --- --- --- HOOKS --- --- ---
 
 client.on('ready', () => {
   console.log("CONNECTED");
-  client.user.setPresence(presence);
+  client.user.setPresence(PRESENCE);
 });
 
 client.on('message', (message) => {
   console.log("MESSAGE");
+  if (message.content == '!karma')
+  {
+    COMMANDS[0].func();
+  }
 });
 
 client.on('messageDelete', (message) => {
