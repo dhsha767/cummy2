@@ -88,7 +88,11 @@ function hk_messageDelete(message) {
 
 function hk_messageReaction(messageReaction, user, add) {
   if (messageReaction.me) return; // ignore reactions from cummy
+  if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author
+  if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
+  console.log('a');
   VOTES.forEach((VOTE) => { // check if reaction is a vote
+    console.log(messageReaction.emoji.id);
     if (VOTE.id == messageReaction.emoji.id) { // we have a match
       if (add)
         console.log('karma + ' + VOTE.value);
