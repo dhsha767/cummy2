@@ -78,6 +78,7 @@ function cmd_sendkarma(message) {
 function hk_ready() {
   console.log("READY");
   client.user.setPresence(PRESENCE); // set bot presence
+  client.channels.forEach((chan) => { if (chan.type == 'text') chan.fetchMessages(); });
 }
 
 function hk_message(message) {
@@ -127,7 +128,6 @@ function hk_raw(packet) {  // see https://github.com/AnIdiotsGuide/discordjs-bot
   if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
   const channel = client.channels.get(packet.d.channel_id);
   channel.fetchMessage(packet.d.message_id).then(message => {
-    console.log(message);
     const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
     const reaction = message.reactions.get(emoji);
     if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
