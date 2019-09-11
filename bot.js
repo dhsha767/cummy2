@@ -108,19 +108,12 @@ function hk_disconnect(event) {
 function hk_raw(packet) { // to make sure we don't miss events which wouldn't be fired usually
   // see https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/coding-guides/raw-events.md
   if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
-  console.log(packet);
   const channel = client.channels.get(packet.d.channel_id);
-  if (channel.messages.has(packet.d.message_id)) return;
   channel.fetchMessage(packet.d.message_id).then(message => {
     const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
     const reaction = message.reactions.get(emoji);
     if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
-    if (packet.t === 'MESSAGE_REACTION_ADD') {
-      client.emit('messageReactionAdd', reaction, client.users.get(packet.d.user_id));
-    }
-    if (packet.t === 'MESSAGE_REACTION_REMOVE') {
-      client.emit('messageReactionRemove', reaction, client.users.get(packet.d.user_id));
-    }
+    hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
   });
 }
 
@@ -129,7 +122,5 @@ function hk_raw(packet) { // to make sure we don't miss events which wouldn't be
 client.on('ready', () => hk_ready());
 client.on('message', (message) => hk_message(message));
 client.on('messageDelete', (message) => hk_messageDelete(message));
-client.on('messageReactionAdd', (messageReaction, user) => hk_messageReaction(messageReaction, user, true));
-client.on('messageReactionRemove', (messageReaction, user) => hk_messageReaction(messageReaction, user, false));
-client.on('disconnect', (event) => hk_disconnect(event));
 client.on('raw', (packet) => hk_raw(packet));
+client.on('disconnect', (event) => hk_disconnect(event));
