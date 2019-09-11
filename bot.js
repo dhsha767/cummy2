@@ -17,13 +17,13 @@ const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound System Dreamscape (HD)'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
+  {name:'👎', id:'👎', value:-1, isDefault:true},
   {name:'👍', id:'👍', value:1, isDefault:true},
   {name:'🔥', id:'🔥', value:5, isDefault:false},
   {name:'😳', id:'😳', value:10, isDefault:false},
   {name:'🙈', id:'🙈', value:25, isDefault:false},
   {name:'💍', id:'💍', value:100, isDefault:false}
 ];
-const DOWNVOTE = {name:'👎', id:'👎', value:-1};
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
   {regex:/^help$/, handler:cmd_help, onlyInGuild:false}, // help docs
@@ -89,6 +89,7 @@ function hk_message(message) {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
         if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
         COMMAND.handler(message); // call the commands' handler function
+        break;
       }
     });
   }
@@ -98,7 +99,6 @@ function hk_message(message) {
     VOTES.forEach((VOTE) => { // react with default votes
       if (VOTE.isDefault) message.react(VOTE.id);
     });
-    message.react(DOWNVOTE.id); // react with downvote
   }
 }
 
@@ -107,17 +107,18 @@ function hk_messageReaction(messageReaction, user, add) {
   //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author (DISABLED FOR TESTING)
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
-  if (messageReaction.emoji.name == DOWNVOTE.name) { // check if reaction is a downvote
-    console.log('downvote');
-  }
-  else {
-    VOTES.forEach((VOTE) => { // check if reaction is a vote
-      if (VOTE.name == messageReaction.emoji.name) { // we have a match!
+  VOTES.forEach((VOTE) => { // check if reaction is a vote
+    if (VOTE.name == messageReaction.emoji.name) { // we have a match!
+      if (VOTE.value > 0) { // upvote logic
         if (add) sendKarma(user, messageReaction.message.author, VOTE.value);
         else sendKarma(messageReaction.message.author, user, VOTE.value);
       }
-    });
-  }
+      else { // downvote logic
+        
+      }
+      break;
+    }
+  });
 }
 
 function hk_disconnect(event) {
