@@ -85,20 +85,24 @@ function hk_message(message) {
 function hk_messageDelete(message) {
   if (message.channel.type == 'dm') return; // ignore dm messages
 
+  console.log(message);
+  
   message.reactions.forEach((reaction) => {
+    console.log('a');
     reaction.users.forEach((user) => {
+      console.log('b');
       hk_messageReaction(reaction, user, false); // remove each reaction
     });
   });
 }
 
 function hk_messageReaction(messageReaction, user, add) {
-  console.log('a');
   if (user.id == client.user.id) return; // ignore reactions from cummy
   //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
-  console.log('b');
+  
   VOTES.forEach((VOTE) => { // check if reaction is a vote
+    console.log(messageReaction.emoji.name);
     if (VOTE.name == messageReaction.emoji.name) { // we have a match
       if (add)
         console.log('karma + ' + VOTE.value);
