@@ -26,8 +26,8 @@ const VOTES = [ // {emoji id, value, reacted by default}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function}
-  {regex:/help$/, handler:handle_help}, // help docs
-  {regex:/karma( [\S]+)?$/, handler:handle_karma} // check karma
+  {regex:/help$/, handler:cmd_help}, // help docs
+  {regex:/karma( [\S]+)?$/, handler:cmd_karma} // check karma
 ];
 
 // --- --- --- INITS --- --- ---
