@@ -52,8 +52,10 @@ setInterval(() => {
 function sendKarma(sender, reciever, amount) {
   if (sender == reciever) return; 
   if (amount <= 0) return;
-  // query sender has amount
-  // query sender karma -amount & reciever karma +amount
+  pgClient.query('select * from karma where uid='+sender.id+';').then((res) => {
+    if (res.rows[0].karma < amount) return;
+    pgClient.query('update karma set karma=karma+1 where uid='+reciever.id+';update karma set karma=karma-1 where uid='+sender.id+';');
+  });
 }
 
 // --- --- --- CMD FUNCS --- --- ---
