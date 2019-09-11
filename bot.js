@@ -58,7 +58,7 @@ function sendKarma(sender, reciever, amount) {
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
-  message.channel.send(HELP_URL);
+  message.channel.send('<' + HELP_URL + '>'); // <> to avoid annoying embed
 }
 
 function cmd_karma(message) {
