@@ -70,7 +70,7 @@ function cmd_sendkarma(message) {
       reciever_userObj = member.user;
     }
   });
-  if (reciever_userObj != null) sendKarma(message.author, reciever_userObj, amount);
+  if (reciever_userObj != null && message.author != reciever_userObj) sendKarma(message.author, reciever_userObj, amount);
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
@@ -101,16 +101,16 @@ function hk_message(message) {
   }
 }
 
-function hk_messageReaction(message, messageReaction, user, add) {
+function hk_messageReaction(messageReaction, user, add) {
   if (user.id == client.user.id) return; // ignore reactions from cummy
   //if (user.id == messageReaction.message.author.id) return; // ignore reactions from message author (DISABLED FOR TESTING)
-  if (message.channel.type == 'dm') return; // ignore reactions in dms
+  if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
     if (VOTE.name == messageReaction.emoji.name) { // we have a match!
       if (VOTE.value > 0) { // upvote logic
-        if (add) sendKarma(user, message.author, VOTE.value);
-        else sendKarma(message.author, user, VOTE.value);
+        if (add) sendKarma(user, messageReaction.message.author, VOTE.value);
+        else sendKarma(messageReaction.message.author, user, VOTE.value);
       }
       else { // downvote logic
         
@@ -128,9 +128,10 @@ function hk_raw(packet) {  // see https://github.com/AnIdiotsGuide/discordjs-bot
   const channel = client.channels.get(packet.d.channel_id);
   channel.fetchMessage(packet.d.message_id).then(message => {
     const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-    const reaction = message.reactions.get(emoji);
-    if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
-    hk_messageReaction(message, reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
+    message.reactions.get(emoji).then(reaction => {
+      if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
+      hk_messageReaction(reaction, client.users.get(packet.d.user_id), packet.t === 'MESSAGE_REACTION_ADD');
+    });
   });
 }
 
