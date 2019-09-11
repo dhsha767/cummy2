@@ -16,13 +16,13 @@ const http = require('http'); // http requests (for the heartbeat)
 const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound System Dreamscape (HD)'}}; // type PresenceData
-const VOTES = [ // {emoji id, value, reacted by default}
-  {id:'👎', value:-1, isDefault:true},
-  {id:'👍', value:1, isDefault:true},
-  {id:'🔥', value:5, isDefault:false},
-  {id:'😳', value:10, isDefault:false},
-  {id:'🙈', value:25, isDefault:false},
-  {id:'💍', value:100, isDefault:false}
+const VOTES = [ // {emoji name, value, reacted by default}
+  {name:'👎', id:'👎', value:-1, isDefault:true},
+  {name:'👍', id:'👍', value:1, isDefault:true},
+  {name:'🔥', id:'🔥', value:5, isDefault:false},
+  {name:'😳', id:'😳', value:10, isDefault:false},
+  {name:'🙈', id:'🙈', value:25, isDefault:false},
+  {name:'💍', id:'💍', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
@@ -92,8 +92,7 @@ function hk_messageReaction(messageReaction, user, add) {
   if (messageReaction.message.channel.type == 'dm') return; // ignore reactions in dms
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
-    console.log(messageReaction.emoji);
-    if (VOTE.id == messageReaction.emoji.id) { // we have a match
+    if (VOTE.name == messageReaction.emoji.name) { // we have a match
       if (add)
         console.log('karma + ' + VOTE.value);
       else
