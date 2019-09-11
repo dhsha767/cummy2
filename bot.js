@@ -84,7 +84,13 @@ function hk_message(message) {
 }
 
 function hk_messageDelete(message) {
-  console.log(message);
+  if (message.channel.type == 'dm') return; // ignore dm messages
+ 
+  message.reactions.forEach((reaction) => {
+    reaction.users.forEach((user) => {
+      hk_messageReaction(reaction, user, false); // remove each reaction
+    });
+  });
 }
 
 function hk_messageReaction(messageReaction, user, add) {
@@ -106,10 +112,9 @@ function hk_disconnect(event) {
   client.connect();
 }
 
-function hk_raw(packet) { // to make sure we don't miss events which wouldn't be fired usually
+function hk_raw(packet) { 
   // see https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/coding-guides/raw-events.md
   if (!['MESSAGE_DELETE', 'MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
-  console.log(packet);
   const channel = client.channels.get(packet.d.channel_id);
   channel.fetchMessage(packet.t === 'MESSAGE_DELETE' ? packet.d.id : packet.d.message_id).then(message => {
     if (packet.t === 'MESSAGE_DELETE') {
@@ -129,4 +134,4 @@ function hk_raw(packet) { // to make sure we don't miss events which wouldn't be
 client.on('ready', () => hk_ready());
 client.on('disconnect', (event) => hk_disconnect(event));
 client.on('message', (message) => hk_message(message));
-client.on('raw', (packet) => hk_raw(packet));
+client.on('raw', (packet) => hk_raw(packet)); // to make sure we handle events on cached messages
