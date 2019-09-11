@@ -26,8 +26,8 @@ const VOTES = [ // {emoji id, value, reacted by default}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function}
-  {regex:/help$/, handler:cmd_help}, // help docs
-  {regex:/karma( [\S]+)?$/, handler:cmd_karma} // check karma
+  {regex:/^help$/, handler:cmd_help}, // help docs
+  {regex:/^karma( [\S]+)?$/, handler:cmd_karma} // check karma
 ];
 
 // --- --- --- INITS --- --- ---
@@ -66,7 +66,7 @@ function hk_message(message) {
   if (message.content.startsWith(COMMAND_PREFIX)) // we may be dealing with a command
   {
     COMMANDS.forEach((COMMAND) => {
-      if (message.content.match(COMMAND.regex) != 1) { // we have a match
+      if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
        COMMAND.handler(message); 
       }
     });
@@ -92,9 +92,9 @@ function hk_disconnect(event) {
 
 // --- --- --- HOOKS --- --- ---
 
-client.on('ready', hk_ready);
-client.on('message', hk_message(message));
-client.on('messageDelete', hk_messageDelete(message));
-client.on('messageReactionAdd', hk_messageReactionAdd(messageReaction, user));
-client.on('messageReactionRemove', hk_messageReactionRemove(messageReaction, user));
-client.on('disconnect', hk_disconnect(event));
+client.on('ready', () => hk_ready());
+client.on('message', (message) => hk_message(message));
+client.on('messageDelete', (message) => hk_messageDelete(message));
+client.on('messageReactionAdd', (messageReaction, user) => hk_messageReactionAdd(messageReaction, user));
+client.on('messageReactionRemove', (messageReaction, user) => hk_messageReactionRemove(messageReaction, user));
+client.on('disconnect', (event) => hk_disconnect(event));
