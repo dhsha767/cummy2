@@ -50,9 +50,10 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function sendKarma(sender, reciever, amount) {
-  // query sender karma -amount
-  // query reciever karma +amount
-  // query log transaction
+  if (sender == reciever) return; 
+  if (amount <= 0) return;
+  // query sender has amount
+  // query sender karma -amount & reciever karma +amount
 }
 
 // --- --- --- CMD FUNCS --- --- ---
@@ -70,12 +71,12 @@ function cmd_sendkarma(message) {
   var reciever_username = args[1].toLowerCase();
   var reciever_userObj = null;
   var amount = parseInt(args[2]);
-  message.channel.guild.members.forEach((member) => { // search for reciever by username (arg1)
+  message.channel.guild.members.forEach((member) => { // search for reciever by username (arg[1])
     if (member.user.username.toLowerCase().startsWith(reciever_username)) { // match
       reciever_userObj = member.user;
     }
   });
-  if (reciever_userObj != null && message.author != reciever_userObj) sendKarma(message.author, reciever_userObj, amount);
+  sendKarma(message.author, reciever_userObj, amount);
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
