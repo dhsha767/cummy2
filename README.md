@@ -8,13 +8,13 @@ _William Moody 10.09.2019_ <br>
 **!help**
 
 _usage:_ `!help` <br>
-Cummy2 sends a link to this file.
+Cummy2 sends a link to this file in the channel.
 
 
 **!karma**
 
 _usage:_ `!karma <opt:username>` <br>
-Cummy2 returns information on either the senders karma, or the specified user.
+Cummy2 returns information on either the sender's, or the specified user's karma.
 
 
 **!sendkarma**
