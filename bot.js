@@ -119,7 +119,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
     .setColor(0xFFFF00)
     .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS');
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
-  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + ' (' + fromMeme===undefined?'Manual':(fromMeme==1?'Added Upvote':'Removed Upvote') + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
+  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + ' (' + (fromMeme===undefined?'Manual':(fromMeme==1?'Removed Upvote':'Added Upvote')) + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
