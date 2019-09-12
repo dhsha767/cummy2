@@ -26,17 +26,19 @@ const VOTES = [ // {emoji name, value, reacted by default}
   {name:'💍', id:'💍', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
-const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
-  {regex:/^help$/, handler:cmd_help, onlyInGuild:false}, // help docs
-  {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false}, // check karma
-  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false}, // send karma to another user (by username)
-  {regex:/^compare [\S]{2,32}#[0-9]{4}( [\S]{2,32}#[0-9]{4})?$/, handler:cmd_compare, onlyInGuild:false} // compares two users karma
+const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?, only owner can issue command}
+  {regex:/^help$/, handler:cmd_help, onlyInGuild:false, onlyByOwner:false}, // help docs
+  {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false, onlyByOwner:false}, // check karma
+  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false, onlyByOwner:false}, // send karma to another user (by username)
+  {regex:/^compare [\S]{2,32}#[0-9]{4}( [\S]{2,32}#[0-9]{4})?$/, handler:cmd_compare, onlyInGuild:false, onlyByOwner:false}, // compares two users karma
+  {regex:/^sql .+;$/, handler:cmd_sql, onlyInGuild:false, onlyByOwner:true}
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '621071935329140778';
 const LEADERBOARD_CHANNEL_ID = '621087939820257300';
 const LEADERBOARD_MESSAGE_ID = '621604987004518419';
+const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
 
@@ -157,6 +159,16 @@ function cmd_compare(message) {
   });
 }
 
+function cmd_sql(message) {
+  var q = message.content.split(' ');
+  q.shift();
+  q.join(' ');
+  console.log(q);
+  pgClient.query(q).then((res) => {
+    message.channel.send(res);
+  });
+}
+
 // --- --- --- HOOK FUNCS --- --- ---
 
 function hk_ready() {
@@ -175,6 +187,7 @@ function hk_message(message) {
     COMMANDS.forEach((COMMAND) => {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
         if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
+        if (COMMAND.onlyByOwner && message.author.id != OWNER_ID) return; // this command is only avaliable to owner
         COMMAND.handler(message); // call the commands' handler function
       }
     });
