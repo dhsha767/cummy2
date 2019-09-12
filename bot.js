@@ -61,12 +61,14 @@ function sendKarma(sender, reciever, amount) {
     if (res.rows[0].karma < amount) return;
     console.log('a');
     pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';');
+    updateLeaderboard();
   });
 }
 
 function updateDownvotes(reciever, amount) {
   if (reciever == null) return;
   pgClient.query('update karma set downvotes=downvotes'+(amount>=0?'+':'-')+Math.abs(amount)+' where uid='+reciever.id+';');
+  updateLeaderboard();
 }
 
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
@@ -182,7 +184,8 @@ function hk_raw(packet) {  // see https://github.com/AnIdiotsGuide/discordjs-bot
 client.on('ready', () => hk_ready()); // when the bot is connected and ready to work
 client.on('disconnect', (event) => hk_disconnect(event)); // reconnect when disconnected for whatever reason
 client.on('message', (message) => hk_message(message)); 
-/* we can't handle message deletes, because the reaction users are not
+/* might have to look more into this.. maybe it is possible. BUT for now
+   we can't handle message deletes, because the reaction users are not
    listed (at least not on uncached messages, which could lead to an exploit where people 
    react negatively to their own (old) messages, delete them and gain free karma, at the same time
    creating new karma in a closed system out of nowhere. :( */
