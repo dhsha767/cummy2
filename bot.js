@@ -56,7 +56,9 @@ function sendKarma(sender, reciever, amount) {
   if (amount <= 0) return;
   pgClient.query('select * from karma where uid='+sender.id+';').then((res) => {
     if (res.rows[0].karma < amount) return;
-    pgClient.query('update karma set karma=karma+1 where uid='+reciever.id+';update karma set karma=karma-1 where uid='+sender.id+';');
+    var res = pgClient.query('update karma set karma=karma+1 where uid='+reciever.id+';update karma set karma=karma-1 where uid='+sender.id+';');
+    console.log(res);
+    return true;
   });
 }
 
@@ -97,7 +99,10 @@ function cmd_sendkarma(message) {
     return;
   } else {
     var amount = parseInt(args[2]);
-    sendKarma(message.author, reciever_userObj, amount);
+    if (sendKarma(message.author, reciever_userObj, amount)) 
+      message.channel.send(message.author.username + '#' + message.author.discriminator + ' sent ' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '  ' + amount + ' karma.');
+    else
+      message.channel.send('Database error while sending karma.');
   }
 }
 
