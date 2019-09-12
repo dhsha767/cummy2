@@ -155,8 +155,8 @@ function cmd_compare(message) {
           var u2_m = user2_info.rows[0].memes;
           var u1_f = user1_info.rows[0].karmafrommemes;
           var u2_f = user2_info.rows[0].karmafrommemes;
-          var u1_a = u1_f / u1_m;
-          var u2_a = u2_f / u2_m;
+          var u1_a = u1_m>0 ? u1_f / u1_m : 0;
+          var u2_a = u2_m>0 ? u2_f / u2_m : 0;
           var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
           var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
           var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
