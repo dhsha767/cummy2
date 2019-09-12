@@ -16,7 +16,7 @@ const http = require('http'); // http requests (for the heartbeat)
 const HELP_URL = "https://github.com/bmdyy/cummy2/blob/master/README.md";
 const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
-const PRESENCE = {status:'idle',game:{type:'LISTENING',name:'Trance - 009 Sound System Dreamscape (HD)'}}; // type PresenceData
+const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'pornhub.com/gay'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
   {name:'👎', id:'👎', value:-1, isDefault:true},
   {name:'👍', id:'👍', value:1, isDefault:true},
