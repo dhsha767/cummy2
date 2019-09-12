@@ -40,6 +40,7 @@ const LEADERBOARD_CHANNEL_ID = '621087939820257300';
 const LEADERBOARD_MESSAGE_ID = '621604987004518419';
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
+const TRANSACTIONS_MAX_COUNT = 25; // how many past transactions to log
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -105,7 +106,11 @@ function updateLeaderboard() {
 
 function updateTransactions(sender, reciever, amount, fromMeme) {
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
-  transactions_msg.edit('t'+Math.random());
+  console.log(transactions_msg);
+  var embed = new Discord.RichEmbed()
+    .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions')
+    .setTimestamp();
+  transactions_msg.edit(embed);
 }
 
 // --- --- --- CMD FUNCS --- --- ---
