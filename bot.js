@@ -163,7 +163,7 @@ function cmd_sql(message) {
   var q = message.content.split(' ');
   q.shift();
   q.join(' ');
-  console.log(q[0]);
+  console.log(q);
   pgClient.query(q[0]).then((res) => {
     console.log(res);
     message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
