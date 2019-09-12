@@ -113,8 +113,8 @@ function updateTransactions(sender, reciever, amount) {
     .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions')
     .setTimestamp();
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1)
-    old_fields.shift();
-  embed.addField('**' + sender.username + '#' + sender.discriminator + '** -> **' + reciever.username + '#' + reciever.discriminator + '**', amount + ' karma');
+    old_fields.pop();
+  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + '_', amount + ' karma');
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
