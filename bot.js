@@ -143,14 +143,10 @@ function hk_messageReaction(message, emoji, user, add) {
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
     if (VOTE.name == emoji.name) { // we have a match!
-      if (VOTE.value > 0) { // upvote logic
-        if (add) sendKarma(user, message.author, VOTE.value);
-        else sendKarma(message.author, user, VOTE.value);
-      }
-      else { // downvote logic
-        if (add) updateDownvotes(message.author, 1);
-        else updateDownvotes(message.author, -1);
-      }
+      if (VOTE.value > 0) // upvote logic
+        add ? sendKarma(user, message.author, VOTE.value) : sendKarma(message.author, user, VOTE.value);
+      else // downvote logic
+        updateDownvotes(message.author, add?1:-1);
     }
   });
 }
