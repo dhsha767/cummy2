@@ -166,8 +166,9 @@ function cmd_compare(message) {
           .addBlankField(true)
           .addField((d_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', ' memes', true)
           .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', ' memes', true)
-          .addField(' kfm', ' avg. kpm', true)
-          .addField(' kfm', ' avg. kpm', true)
+          .addBlankField(true)
+          .addField('? kfm', '? avg. kpm', true)
+          .addField('? kfm', '? avg. kpm', true)
           .addBlankField(true)
           .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**', '-')
           .setFooter('kpm = karma per. meme, kfm = karma from memes');
