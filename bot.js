@@ -122,7 +122,7 @@ function cmd_karma(message) {
   } else {
     getInfo(target).then((info) => {
       var kpm = info.rows[0].memes>0 ? info.rows[0].karmafrommemes / info.rows[0].memes : 0;
-      var embed = Discord.RichEmbed()
+      var embed = new Discord.RichEmbed()
         .setColor(0xFFFF00)
         .setTitle(target.username + '#' + target.discriminator)
         .addField(info.rows[0].karma + ' karma', info.rows[0].downvotes + ' downvotes')
