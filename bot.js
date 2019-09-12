@@ -229,8 +229,8 @@ function hk_message(message) {
     // this classifies as a meme! (has embed OR has attachment OR has url)
     VOTES.forEach((VOTE) => { // react with default votes
       if (VOTE.isDefault) message.react(VOTE.id);
-      updateMemeCount(message.author);
     });
+    updateMemeCount(message.author);
   }
 }
 
