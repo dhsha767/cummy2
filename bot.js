@@ -62,7 +62,7 @@ function sendKarma(sender, reciever, amount) {
 
 function updateDownvotes(reciever, amount) {
   if (reciever == null) return;
-  pgClient.query('update karma set downvotes=downvotes'+(amount>=0?'+':'-')+Math.abs(amount)+' where uid='+reciever.id';');
+  pgClient.query('update karma set downvotes=downvotes'+(amount>=0?'+':'-')+Math.abs(amount)+' where uid='+reciever.id+';');
 }
 
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
