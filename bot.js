@@ -32,6 +32,7 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
   {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false} // send karma to another user (by username)
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
+const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = 621071935329140778;
 
 // --- --- --- INITS --- --- ---
@@ -59,10 +60,12 @@ function sendKarma(sender, reciever, amount) {
   });
 }
 
-function findUser(username) { // searches for user by username and returns User object (or null)
+function findUser(string) { // searches for user by username#discrim and returns User object (or null)
   var userObj = null;
-  client.guilds.find(GUILD_ID).members.forEach((member) => { // search for reciever by username (arg[1])
-    if (member.user.username.toLowerCase().startsWith(username)) { // match
+  if (string.match(USERSTRING_REGEX) == null) return;
+  var args = string.split('#');
+  client.guilds.find(GUILD_ID).members.forEach((member) => { // search for reciever by username#discrim (arg[1])
+    if (member.user.username.toLowerCase() == args[0] && member.user.discriminator == args[1]) { // match
       userObj = member.user;
     }
   });
@@ -80,7 +83,7 @@ function cmd_karma(message) {
   var args = message.split(' ');
   if (args > 1) target = findUser(args[1]); // specified user to check
   pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
-    message.channel.send(target.);
+    message.channel.send(target.username + '#' + target.disciminator + ' has ' + res.karma + ' karma + '.');
   });
 }
 
