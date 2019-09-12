@@ -175,9 +175,11 @@ function cmd_sql(message) {
       var msg = '';
       res.fields.forEach(field => {
         msg += field.name + '(' + field.dataTypeId + ') | ';
+        console.log(field);
       });
       msg += '\n';
       res.rows.forEach(row => {
+        console.log(row);
         msg += row + '\n';
       });
       message.channel.send(msg);
