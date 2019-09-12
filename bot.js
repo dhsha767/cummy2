@@ -10,7 +10,6 @@
 const Discord = require('discord.js'); // discord api (https://discord.js.org)
 const PGClient = require('pg').Client; // postgresql (db)
 const http = require('http'); // http requests (for the heartbeat)
-const JSON = require('json'); // json for sql requests
 
 // --- --- --- VARS --- --- ---
 
