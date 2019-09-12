@@ -3,6 +3,10 @@
 Re-code of the original Cummy, to be used on the Dank Memes server. <br>
 _William Moody 10.09.2019_ <br>
 
+## General
+
+_..._
+
 ## Commands
 
 **!help**
@@ -36,4 +40,4 @@ Cummy2 runs the issued query on it's database and returns the result in chat. *O
 
 ## API
 
-_To-Do_
+_..._
