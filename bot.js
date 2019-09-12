@@ -80,7 +80,7 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
     '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('+'+amount):('-'+amount)) + ';')))
     .then(res => {
       updateLeaderboard();
-      updateTransactions(sender, reciever, amount);
+      updateTransactions(sender, reciever, amount, fromMeme);
     });
   });
 }
@@ -111,14 +111,14 @@ function updateLeaderboard() {
   leaderboard_msg.edit(embed);
 }
 
-function updateTransactions(sender, reciever, amount) {
+function updateTransactions(sender, reciever, amount, fromMeme) {
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
   var old_fields = transactions_msg.embeds[0].fields;
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
     .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS');
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
-  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + '_', '**' + amount + '** karma ['+getTimeStamp()+']');
+  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + ' (' + fromMeme===undefined?'Manual':(fromMeme==1?'Added Upvote':'Removed Upvote') + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
