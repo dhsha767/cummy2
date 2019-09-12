@@ -83,6 +83,10 @@ function updateDownvotes(reciever, amount) {
   updateLeaderboard();
 }
 
+function updateMemeCount(author) {
+  pgClient.query('update karma set memes=memes+1 where uid='+author.id);
+}
+
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
@@ -225,6 +229,7 @@ function hk_message(message) {
     // this classifies as a meme! (has embed OR has attachment OR has url)
     VOTES.forEach((VOTE) => { // react with default votes
       if (VOTE.isDefault) message.react(VOTE.id);
+      updateMemeCount(message.author);
     });
   }
 }
