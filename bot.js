@@ -174,14 +174,11 @@ function cmd_sql(message) {
     if (res.command == 'SELECT') {
       var msg = '';
       res.fields.forEach(field => {
-        msg += field + ' | ';
+        msg += field.name + '(' + field.dataTypeId + ') | ';
       });
       msg += '\n';
       res.rows.forEach(row => {
-        res.fields.forEach(field => {
-          msg += row.field + ' | ';
-        });
-        msg += '\n';
+        msg += row + '\n';
       });
       message.channel.send(msg);
     }
