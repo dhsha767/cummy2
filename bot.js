@@ -106,7 +106,7 @@ function updateLeaderboard() {
 
 function updateTransactions(sender, reciever, amount, fromMeme) {
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
-  var old_fields = transaction_msg.embeds[0].fields;
+  var old_fields = transactions_msg.embeds[0].fields;
   console.log(old_fields);
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
