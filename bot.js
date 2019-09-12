@@ -1,5 +1,5 @@
 /*
-  @title        Cummy 2.0
+  @title        Cummy2
   @description  Re-code of Cummy to be used on the Dank Memes server
   @author       William Moody (@bmdyy#0068)
   @date         10.09.2019
@@ -118,7 +118,11 @@ function cmd_sendkarma(message) {
 }
 
 function cmd_compare(message) {
-  message.channel.send('comparison');
+  var embed = new Discord.RichEmbed()
+    .setColor('#0099ff')
+    .setTitle('title')
+    .setTimestamp();
+  message.channel.send(embed);
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
