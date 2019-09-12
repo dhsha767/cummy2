@@ -164,17 +164,13 @@ function cmd_sql(message) {
   q.shift();
   q.join(' ');
   pgClient.query(q[0]).then((res) => {
-    var j = {};
-    j.r = function() {
-      var o = {};
-      res.forEach((v,k) => {
-        console.log(v + ' ' + k);
-        o[k] = v;
-      });
-      return o;
-    };
-    console.log(j);
-    message.channel.send(JSON.stringify(j));
+    var o = {};
+    res.forEach((v,k) => {
+      console.log(v + ' ' + k);
+      o[k] = v;
+    });
+    console.log(o);
+    message.channel.send(JSON.stringify(o));
   });
 }
 
