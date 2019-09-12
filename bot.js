@@ -170,6 +170,7 @@ function cmd_sql(message) {
       res.forEach((v,k) => {
         o[k] = v;
       });
+      return o;
     };
     message.channel.send(JSON.stringify(j));
   });
