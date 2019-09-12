@@ -89,7 +89,7 @@ function cmd_karma(message) {
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
-      message.channel.send('***' + target.username + '_#_' + target.discriminator + '*** _has_ ***' + res.rows[0].karma + '*** _karma and_ ***' + res.rows[0].downvotes + '*** _downvotes._');
+      message.channel.send('***' + target.username + '#' + target.discriminator + '*** _has_ ***' + res.rows[0].karma + '*** _karma and_ ***' + res.rows[0].downvotes + '*** _downvotes._');
     });
   }
 }
@@ -102,7 +102,7 @@ function cmd_sendkarma(message) {
     return;
   } else {
     var amount = parseInt(args[2]);
-    message.channel.send('***' + message.author.username + '_#_' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '_#_' + reciever_userObj.discriminator + '***_._');
+    message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._');
   }
 }
 
