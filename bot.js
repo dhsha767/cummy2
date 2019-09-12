@@ -114,7 +114,10 @@ function updateTransactions(sender, reciever, amount) {
     .setTimestamp();
   while (old_fields.length > TRANSACTIONS_MAX_COUNT)
     old_fields.shift();
-  embed.addField('**' + sender.username + '#' + sender.discriminator + '** -> **' + reciever.username + '#' + reciever.discriminator + ' : ' + amount);
+  embed.addField('**' + sender.username + '#' + sender.discriminator + '** -> **' + reciever.username + '#' + reciever.discriminator + '**', amount + ' karma');
+  old_fields.forEach(field => {
+    console.log(field);
+  });
   transactions_msg.edit(embed);
 }
 
