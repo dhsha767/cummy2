@@ -120,7 +120,7 @@ function cmd_sendkarma(message) {
 }
 
 function cmd_compare(message) {
-  var args = message.split(' ');
+  var args = message.content.split(' ');
   var user1 = findUser(args[1]);
   var user2 = args.length > 2 ? findUser(args[2]) : message.author;
   getInfo(user1).then((user1_info) => {
