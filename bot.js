@@ -127,7 +127,7 @@ function cmd_compare(message) {
     getInfo(user2).then((user2_info) => {
       if (user1 != null && user2 != null && user1_info != null && user2_info != null) {
         var u1_k = user1_info.rows[0].karma;
-        var u2_k = user2.info.rows[0].karma;
+        var u2_k = user2_info.rows[0].karma;
         var u1_d = user1_info.rows[0].downvotes;
         var u2_d = user2_info.rows[0].downvotes;
         var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
