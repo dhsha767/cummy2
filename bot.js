@@ -163,8 +163,7 @@ function cmd_sql(message) {
   var q = message.content.split(' ');
   q.shift();
   q.join(' ');
-  console.log(q);
-  pgClient.query(q).then((res) => {
+  pgClient.query(q[0]).then((res) => {
     message.channel.send(res);
   }).catch((err) => {
     message.channel.send(err);
