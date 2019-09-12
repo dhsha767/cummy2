@@ -105,7 +105,10 @@ function findUser(string) { // searches for user by username#discrim and returns
 
 function updateLeaderboard() {
   var leaderboard_msg = client.channels.get(LEADERBOARD_CHANNEL_ID).messages.get(LEADERBOARD_MESSAGE_ID);
-  leaderboard_msg.edit('r'+Math.random());
+  var embed = new Discord.RichEmbed()
+    .setColor(0xFFFF00)
+    .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS');
+  leaderboard_msg.edit(embed);
 }
 
 function updateTransactions(sender, reciever, amount) {
@@ -113,7 +116,7 @@ function updateTransactions(sender, reciever, amount) {
   var old_fields = transactions_msg.embeds[0].fields;
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
-    .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions');
+    .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS');
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
   embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + '_', '**' + amount + '** karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
