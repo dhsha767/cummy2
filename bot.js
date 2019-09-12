@@ -33,7 +33,7 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
-const GUILD_ID = '621071935329140778';
+const GUILD_ID = 621071935329140778;
 
 // --- --- --- INITS --- --- ---
 
@@ -64,10 +64,9 @@ function findUser(string) { // searches for user by username#discrim and returns
   var userObj = null;
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
-  console.log(client.guilds.get(GUILD_ID).members);
-  /*client.guilds.find(GUILD_ID).members.find(([key, val]) => {
+  client.guilds.find(GUILD_ID).members.find(([key, val]) => {
     return val.user.username == args[0] && val.user.discriminator == args[1];
-  });*/
+  });
   return userObj;
 }
 
@@ -83,7 +82,7 @@ function cmd_karma(message) {
   if (args.length > 1) target = findUser(args[1]); // specified user to check
   if (target == null) return; // didnt find
   pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
-    message.channel.send(target.username + '#' + target.disciminator + ' has ' + res.rows[0].karma + ' karma.');
+    message.channel.send(target.username + '#' + target.discriminator + ' has ' + res.rows[0].karma + ' karma.');
   });
 }
 
