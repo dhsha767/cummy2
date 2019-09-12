@@ -134,11 +134,13 @@ function cmd_compare(message) {
         var d_comp = u1_d>u2_d?0:(u1_d<u2_d?1:2); // u1 / u2 / eq
         var embed = new Discord.RichEmbed()
           .setColor('#ffff00')
-          .setTitle('_!compare_')
+          .setTitle('_'+message.content+'_')
           .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
           .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
-          .addField((k_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', '-', true)
-          .addField((k_comp>0?'('+u2_d+')':u2_d) + ' downvotes', '-', true);
+          .addBlankField()
+          .addField((d_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', '-', true)
+          .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', '-', true)
+          .setTimestamp();
         message.channel.send(embed);
       }
       else {
