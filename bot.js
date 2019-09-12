@@ -56,7 +56,7 @@ function sendKarma(sender, reciever, amount) {
   if (amount <= 0) return;
   pgClient.query('select * from karma where uid='+sender.id+';').then((res) => {
     if (res.rows[0].karma < amount) return;
-    pgClient.query('update karma set karma=karma+1 where uid='+reciever.id+';update karma set karma=karma-1 where uid='+sender.id+';').then((res) =>
+    pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';').then((res) =>
       console.log(res);
       return true;                                                                                                                                   {
     });
