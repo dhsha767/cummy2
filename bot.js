@@ -39,7 +39,7 @@ const GUILD_ID = '621071935329140778';
 const LEADERBOARD_CHANNEL_ID = '621087939820257300';
 const LEADERBOARD_MESSAGE_ID = '621604987004518419';
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
-const TRANSACTIONS_MESSAGE_ID = '';
+const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -197,7 +197,6 @@ function hk_ready() {
   client.channels.forEach((chan) => {
     if (chan.type == 'text') chan.fetchMessages();
   }); // cache old messages
-  client.channels.get(TRANSACTIONS_CHANNEL_ID).send('e');
 }
 
 function hk_message(message) {
