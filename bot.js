@@ -173,15 +173,12 @@ function cmd_sql(message) {
   pgClient.query(q).then((res) => {
     if (res.command == 'SELECT') {
       var msg = '';
-      res.fields.forEach(field => {
+      /*res.fields.forEach(field => {
         msg += field.name + '(' + field.dataTypeID + ') | ';
       });
-      msg += '\n';
+      msg += '\n';*/
       res.rows.forEach(row => {
-        row.forEach(val => {
-          msg += val + ' | ';
-        });
-        msg += '\n';
+        msg += JSON.stringify(row) + '\n';
       });
       message.channel.send(msg);
     }
