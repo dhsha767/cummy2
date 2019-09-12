@@ -109,7 +109,12 @@ function updateLeaderboard() {
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS');
-  leaderboard_msg.edit(embed);
+  pgClient.query('select * from karma order by karma-downvotes desc;').then(res => {
+    res.rows.forEach(row => {
+      embed.addField(row.uid, row.karma);
+    });
+    leaderboard_msg.edit(embed);
+  });
 }
 
 function updateTransactions(sender, reciever, amount, fromMeme) {
@@ -119,7 +124,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
     .setColor(0xFFFF00)
     .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS');
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
-  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + ' (' + (fromMeme===undefined?'Manual':(fromMeme==1?'Removed Upvote':'Added Upvote')) + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
+  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + ' (' + (fromMeme===undefined?'Manual':(fromMeme==1?'Upvote removed':'Upvote removed')) + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
