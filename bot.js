@@ -62,13 +62,19 @@ function getInfo(user) {
   return pgClient.query('select * from karma where uid='+user.id+';');
 }
 
-function sendKarma(sender, reciever, amount) {
+function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update karmafrommemes as well
+  // fromMeme = undefined => call didnt come from a meme
+  // fromMeme = 1 => reciever gets + 1 ( author )
+  // fromMeme = 2 => sender gets - 1 ( author )
   if (sender == reciever) return; 
   if (amount <= 0) return;
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) return;
-    pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';');
-    updateLeaderboard();
+    pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
+    update karma set karma=karma-'+amount+' where uid='+sender.id+';' + (typeof fromMeme=='undefined')?'':'\
+    update karma set karmafrommemes=karmafrommemes' + fromMeme==1?('+'+amount):('-'+amount) + ';').then(res => {
+      updateLeaderboard();
+    });
   });
 }
 function updateDownvotes(reciever, amount) {
@@ -222,7 +228,7 @@ function hk_messageReaction(message, emoji, user, add) {
   VOTES.forEach((VOTE) => { // check if reaction is a vote
     if (VOTE.name == emoji.name) { // we have a match!
       if (VOTE.value > 0) // upvote logic
-        add ? sendKarma(user, message.author, VOTE.value) : sendKarma(message.author, user, VOTE.value);
+        add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
       else // downvote logic
         updateDownvotes(message.author, add?1:-1);
     }
