@@ -54,20 +54,19 @@ setInterval(() => {
 
 // --- --- --- HELPER FUNCS --- --- ---
 
-function sendKarma(sender, reciever, amount) {
-  if (sender == reciever) return; 
-  if (amount <= 0) return;
-  getInfo(sender).then((info) => {
-    if (info.karma < amount) return;
-    pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';');
-    updateLeaderboard();
-  });
-}
-
 function getInfo(user) {
   return pgClient.query('select * from karma where uid='+user.id+';');
 }
 
+function sendKarma(sender, reciever, amount) {
+  if (sender == reciever) return; 
+  if (amount <= 0) return;
+  getInfo(sender).then((info) => {
+    if (info.rows[0].karma < amount) return;
+    pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';');
+    updateLeaderboard();
+  });
+}
 function updateDownvotes(reciever, amount) {
   if (reciever == null) return;
   pgClient.query('update karma set downvotes=downvotes'+(amount>=0?'+':'-')+Math.abs(amount)+' where uid='+reciever.id+';');
@@ -102,8 +101,7 @@ function cmd_karma(message) {
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     getInfo(target).then((info) => {
-      console.log(info);
-      message.channel.send('***' + target.username + '#' + target.discriminator + '*** _has_ ***' + info.karma + '*** _karma and_ ***' + info.downvotes + '*** _downvotes._');
+      message.channel.send('***' + target.username + '#' + target.discriminator + '*** _has_ ***' + info.rows[0].karma + '*** _karma and_ ***' + info.rows[0].downvotes + '*** _downvotes._');
     });
   }
 }
@@ -125,18 +123,20 @@ function cmd_compare(message) {
   var args = message.split(' ');
   var user1 = findUser(args[1]);
   var user2 = args.length > 2 ? findUser(args[2]) : message.author;
-  var user1_info = getInfo(user1);
-  var user2_info = getInfo(user2);
-  if (user1 != null && user2 != null && user1_info != null && user2_info != null) {
-    var embed = new Discord.RichEmbed()
-      .setColor('#ffff00')
-      .setTitle(user1.username + '#' + user1.discriminator + ' vs. ' + user2.username + '#' + user2.discriminator)
-      .addField();
-    message.channel.send(embed);
-  }
-  else {
-    message.channel.send('_Couldn\'t find one or both of the specified users._');
-  }
+  getInfo(user1).then((user1_info) => {
+    getInfo(user2).then((user2_info) => {
+      if (user1 != null && user2 != null && user1_info != null && user2_info != null) {
+        var embed = new Discord.RichEmbed()
+          .setColor('#ffff00')
+          .setTitle(user1.username + '#' + user1.discriminator + ' vs. ' + user2.username + '#' + user2.discriminator)
+          .addField();
+        message.channel.send(embed);
+      }
+      else {
+        message.channel.send('_Couldn\'t find one or both of the specified users._');
+      }
+    });
+  });
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
