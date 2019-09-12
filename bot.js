@@ -112,11 +112,11 @@ function updateTransactions(sender, reciever, amount) {
     .setColor(0xFFFF00)
     .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions')
     .setTimestamp();
-  while (old_fields.length > TRANSACTIONS_MAX_COUNT)
+  while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1)
     old_fields.shift();
   embed.addField('**' + sender.username + '#' + sender.discriminator + '** -> **' + reciever.username + '#' + reciever.discriminator + '**', amount + ' karma');
   old_fields.forEach(field => {
-    console.log(field);
+    embed.addField(field.name, field.value, field.inline);
   });
   transactions_msg.edit(embed);
 }
