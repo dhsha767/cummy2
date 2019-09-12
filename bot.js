@@ -104,14 +104,20 @@ function findUser(string) { // searches for user by username#discrim and returns
   return userObj==null ? null : userObj.user;
 }
 
+function getUserByUid(uid) {
+  return client.guilds.get(GUILD_ID).members.get(uid); 
+}
+
 function updateLeaderboard() {
   var leaderboard_msg = client.channels.get(LEADERBOARD_CHANNEL_ID).messages.get(LEADERBOARD_MESSAGE_ID);
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS');
-  pgClient.query('select * from karma order by karma-downvotes desc;').then(res => {
+  pgClient.query('select * from karma order by karma-downvotes desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
+    var i = 1;
     res.rows.forEach(row => {
-      embed.addField(row.uid, row.karma);
+      var u = getUserFromUid(row.uid);
+      embed.addField(i + '. ' + u.username + '#' + u.discriminator, '_' + row.karma + ' karma / ' + row.downvotes + ' downvotes_');
     });
     leaderboard_msg.edit(embed);
   });
