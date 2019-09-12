@@ -65,10 +65,10 @@ function findUser(string) { // searches for user by username#discrim and returns
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
   client.guilds.get(GUILD_ID).members.find((val) => {
-    console.log('val ' + val['user'].username + ' ' + val['user'].discriminator);
-    console.log('args ' + args[0] + ' ' + args[1]);
-    console.log('ret ' + (val['user'].username == args[0]) + ' ' + (val['user'].discriminator == args[1]));
-    return val['user'].username.toLowerCase() === args[0] && val['user'].discriminator == args[1];
+    //console.log('val ' + val['user'].username + ' ' + val['user'].discriminator);
+    //console.log('args ' + args[0] + ' ' + args[1]);
+    //console.log('ret ' + (val['user'].username == args[0]) + ' ' + (val['user'].discriminator == args[1]));
+    return val['user'].username.toLowerCase() == args[0].toLowerCase() && val['user'].discriminator == args[1];
   });
   return userObj;
 }
@@ -95,7 +95,7 @@ function cmd_karma(message) {
 
 function cmd_sendkarma(message) {
   var args = message.content.split(' ');
-  var reciever_userObj = findUser(args[1].toLowerCase());
+  var reciever_userObj = findUser(args[1]);
   if (reciever_userObj == null) {
     message.channel.send('Couldn\'t find ' + args[1] + '.');
     return;
