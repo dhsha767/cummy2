@@ -117,7 +117,7 @@ function updateLeaderboard() {
     var i = 1;
     res.rows.forEach(row => {
       var u = getUserFromUid(row.uid);
-      embed.addField(i + '. ' + u.username + '#' + u.discriminator, '_' + row.karma + ' karma / ' + row.downvotes + ' downvotes_');
+      embed.addField(i + '. ' + u.username + '#' + u.discriminator, '***' + row.karma + '*** _karma,_ ***' + row.downvotes + '*** _downvotes_');
       i += 1;
     });
     leaderboard_msg.edit(embed);
@@ -306,9 +306,9 @@ function hk_raw(packet) {  // see https://github.com/AnIdiotsGuide/discordjs-bot
 client.on('ready', () => hk_ready()); // when the bot is connected and ready to work
 client.on('disconnect', (event) => hk_disconnect(event)); // reconnect when disconnected for whatever reason
 client.on('message', (message) => hk_message(message)); 
+client.on('raw', (packet) => hk_raw(packet)); // to make sure we handle reactions on uncached messages
 /* might have to look more into this.. maybe it is possible. BUT for now
    we can't handle message deletes, because the reaction users are not
    listed (at least not on uncached messages, which could lead to an exploit where people 
    react negatively to their own (old) messages, delete them and gain free karma, at the same time
    creating new karma in a closed system out of nowhere. :( */
-client.on('raw', (packet) => hk_raw(packet)); // to make sure we handle reactions on uncached messages
