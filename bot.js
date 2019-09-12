@@ -91,7 +91,7 @@ function findUser(string) { // searches for user by username#discrim and returns
   var userObj = client.guilds.get(GUILD_ID).members.find((val) => {
     return val['user'].username.toLowerCase() == args[0].toLowerCase() && val['user'].discriminator == args[1];
   });
-  return userObj.user;
+  return userObj==null ? null : userObj.user;
 }
 
 function updateLeaderboard() {
