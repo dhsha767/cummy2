@@ -57,12 +57,15 @@ setInterval(() => {
 function sendKarma(sender, reciever, amount) {
   if (sender == reciever) return; 
   if (amount <= 0) return;
-  pgClient.query('select * from karma where uid='+sender.id+';').then((res) => {
-    if (res.rows[0].karma < amount) return;
-    console.log('a');
+  getInfo(sender).then((info) => {
+    if (info.karma < amount) return;
     pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';');
     updateLeaderboard();
   });
+}
+
+function getInfo(user) {
+  return pgClient.query('select * from karma where uid='+user.id+';');
 }
 
 function updateDownvotes(reciever, amount) {
@@ -98,8 +101,8 @@ function cmd_karma(message) {
   if (target == null) { // didnt find
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
-    pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
-      message.channel.send('***' + target.username + '#' + target.discriminator + '*** _has_ ***' + res.rows[0].karma + '*** _karma and_ ***' + res.rows[0].downvotes + '*** _downvotes._');
+    getInfo(target).then((info) => {
+      message.channel.send('***' + target.username + '#' + target.discriminator + '*** _has_ ***' + info.karma + '*** _karma and_ ***' + info.downvotes + '*** _downvotes._');
     });
   }
 }
@@ -118,11 +121,19 @@ function cmd_sendkarma(message) {
 }
 
 function cmd_compare(message) {
-  var embed = new Discord.RichEmbed()
-    .setColor('#0099ff')
-    .setTitle('title')
-    .setTimestamp();
-  message.channel.send(embed);
+  var args = message.split(' ');
+  var user1 = findUser(args[1]);
+  var user2 = args.length > 2 ? findUser(args[2]) : message.author;
+  if (user1 != null && user2 != null) {
+    var embed = new Discord.RichEmbed()
+      .setColor('#ffff00')
+      .setTitle(user1.username + '#' + user1.discriminator + ' vs. ' + user2.username + '#' + user2.discriminator)
+      .addField();
+    message.channel.send(embed);
+  }
+  else {
+    message.channel.send('_Couldn\'t find one or both of the specified users._');
+  }
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
