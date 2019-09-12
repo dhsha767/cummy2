@@ -163,10 +163,10 @@ function cmd_sql(message) {
   var q = message.content.split(' ');
   q.shift();
   q = q.join(' ');
-  console.log(q);
   pgClient.query(q).then((res) => {
-    console.log(res);
     message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
+  }).catch((err) => {
+    message.channel.send(err);
   });
 }
 
