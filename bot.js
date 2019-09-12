@@ -162,9 +162,9 @@ function cmd_compare(message) {
 function cmd_sql(message) {
   var q = message.content.split(' ');
   q.shift();
-  q.join(' ');
+  q = q.join(' ');
   console.log(q);
-  pgClient.query(q[0]).then((res) => {
+  pgClient.query(q).then((res) => {
     console.log(res);
     message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
   });
