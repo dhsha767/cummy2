@@ -33,7 +33,7 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
-const GUILD_ID = 621071935329140778;
+const GUILD_ID = '621071935329140778';
 
 // --- --- --- INITS --- --- ---
 
