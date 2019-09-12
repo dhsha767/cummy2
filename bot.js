@@ -121,7 +121,15 @@ function cmd_karma(message) {
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     getInfo(target).then((info) => {
-      message.channel.send('***' + target.username + '#' + target.discriminator + '*** _has_ ***' + info.rows[0].karma + '*** _karma and_ ***' + info.rows[0].downvotes + '*** _downvotes._');
+      var kpm = info.rows[0].memes>0 ? info.rows[0].karmafrommemes / info.rows[0].memes : 0;
+      var embed = Discord.RichEmbed()
+        .setColor(0xFFFF00)
+        .setTitle(target.username + '#' + target.discriminator)
+        .addField(info.rows[0].karma + ' karma', info.rows[0].downvotes + ' downvotes')
+        .addField(kpm + 'kpm', info.rows[0].memes + ' memes')
+        .addField(info.rows[0].karmafrommemes, '-')
+        .setFooter('kpm = karma per meme, kfm = karma from memes');
+      message.channel.send(embed);
     });
   }
 }
@@ -164,7 +172,7 @@ function cmd_compare(message) {
           var u2_s = (k_comp>0?1:0) + (d_comp>0?1:0) + (a_comp>0?1:0);
           var w = u1_s>u2_s?user1:(u1_s<u2_s?user2:null);
           var embed = new Discord.RichEmbed()
-            .setColor('#ffff00')
+            .setColor(0xFFFF00)
             .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
             .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
             .addBlankField(true)
