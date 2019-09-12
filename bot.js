@@ -64,8 +64,8 @@ function findUser(string) { // searches for user by username#discrim and returns
   var userObj = null;
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
-  client.guilds.find(GUILD_ID).members.forEach((member) => {
-    if (member.user.username == args[0] && member.user.discriminator == args[1]) userObj = member;
+  client.guilds.find(GUILD_ID).members.find(([key, val]) => {
+    return val.user.username == args[0] && val.user.discriminator == args[1];
   });
   return userObj;
 }
@@ -80,6 +80,7 @@ function cmd_karma(message) {
   var target = message.author;
   var args = message.content.split(' ');
   if (args.length > 1) target = findUser(args[1]); // specified user to check
+  if (target == null) return; // didnt find
   pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
     message.channel.send(target.username + '#' + target.disciminator + ' has ' + res.rows[0].karma + ' karma.');
   });
@@ -88,6 +89,7 @@ function cmd_karma(message) {
 function cmd_sendkarma(message) {
   var args = message.content.split(' ');
   var reciever_userObj = findUser(args[1].toLowerCase());
+  if (reciever_userObj == null) return; // didnt find
   var amount = parseInt(args[2]);
   if (reciever_userObj != null) sendKarma(message.author, reciever_userObj, amount);
 }
