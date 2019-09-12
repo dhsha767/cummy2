@@ -102,6 +102,7 @@ function cmd_karma(message) {
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     getInfo(target).then((info) => {
+      console.log(info);
       message.channel.send('***' + target.username + '#' + target.discriminator + '*** _has_ ***' + info.karma + '*** _karma and_ ***' + info.downvotes + '*** _downvotes._');
     });
   }
@@ -124,7 +125,9 @@ function cmd_compare(message) {
   var args = message.split(' ');
   var user1 = findUser(args[1]);
   var user2 = args.length > 2 ? findUser(args[2]) : message.author;
-  if (user1 != null && user2 != null) {
+  var user1_info = getInfo(user1);
+  var user2_info = getInfo(user2);
+  if (user1 != null && user2 != null && user1_info != null && user2_info != null) {
     var embed = new Discord.RichEmbed()
       .setColor('#ffff00')
       .setTitle(user1.username + '#' + user1.discriminator + ' vs. ' + user2.username + '#' + user2.discriminator)
