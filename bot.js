@@ -164,6 +164,11 @@ function cmd_sql(message) {
   q.shift();
   q = q.join(' ');
   pgClient.query(q).then((res) => {
+    if (res.command == 'SELECT') {
+      res.rows.forEach(row => {
+        console.log(row);
+      });
+    }
     message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
   });
 }
