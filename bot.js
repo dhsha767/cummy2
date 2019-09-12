@@ -34,6 +34,7 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '621071935329140778';
+const LEADERBOARD_CHANNEL_ID = '621087939820257300';
 
 // --- --- --- INITS --- --- ---
 
@@ -77,7 +78,7 @@ function findUser(string) { // searches for user by username#discrim and returns
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
-  message.channel.send('<' + HELP_URL + '>'); // <> to avoid annoying embed
+  message.channel.send('_<' + HELP_URL + '>_'); // <> to avoid annoying embed
 }
 
 function cmd_karma(message) {
@@ -85,10 +86,10 @@ function cmd_karma(message) {
   var args = message.content.split(' ');
   if (args.length > 1) target = findUser(args[1]); // specified user to check
   if (target == null) { // didnt find
-    message.channel.send('Couldn\'t find ' + args[1] + '.');
+    message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
-      message.channel.send(target.username + '#' + target.discriminator + ' has ' + res.rows[0].karma + ' karma and ' + res.rows[0].downvotes + ' downvotes.');
+      message.channel.send('***' + target.username + '_#_' + target.discriminator + '*** _has_ ***' + res.rows[0].karma + '*** _karma and_ ***' + res.rows[0].downvotes + '*** _downvotes._');
     });
   }
 }
@@ -97,11 +98,11 @@ function cmd_sendkarma(message) {
   var args = message.content.split(' ');
   var reciever_userObj = findUser(args[1]);
   if (reciever_userObj == null) { // didnt find
-    message.channel.send('Couldn\'t find ' + args[1] + '.');
+    message.channel.send('_Couldn\'t find ' + args[1] + '._');
     return;
   } else {
     var amount = parseInt(args[2]);
-    message.channel.send(message.author.username + '#' + message.author.discriminator + ' sent ' + amount + ' karma to ' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '.');
+    message.channel.send('***' + message.author.username + '_#_' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '_#_' + reciever_userObj.discriminator + '***_._');
   }
 }
 
