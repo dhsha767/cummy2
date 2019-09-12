@@ -63,6 +63,10 @@ function getInfo(user) {
   return pgClient.query('select * from karma where uid='+user.id+';');
 }
 
+function getTimeStamp() {
+  return new Date().toISOString();
+}
+
 function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update karmafrommemes as well
   // fromMeme = undefined => call didnt come from a meme
   // fromMeme = 1 => reciever gets +1 kfm ( author )
@@ -114,7 +118,7 @@ function updateTransactions(sender, reciever, amount) {
     .setTimestamp();
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1)
     old_fields.pop();
-  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + '_', amount + ' karma');
+  embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + '_', amount + ' karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
