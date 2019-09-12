@@ -56,17 +56,17 @@ function sendKarma(sender, reciever, amount) {
   if (amount <= 0) return;
   pgClient.query('select * from karma where uid='+sender.id+';').then((res) => {
     if (res.rows[0].karma < amount) return;
-    var res = pgClient.query('update karma set karma=karma+1 where uid='+reciever.id+';update karma set karma=karma-1 where uid='+sender.id+';');
-    console.log(res);
-    return true;
+    pgClient.query('update karma set karma=karma+1 where uid='+reciever.id+';update karma set karma=karma-1 where uid='+sender.id+';').then((res) =>
+      console.log(res);
+      return true;                                                                                                                                   {
+    });
   });
 }
 
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
-  var userObj = null;
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
-  userObj = client.guilds.get(GUILD_ID).members.find((val) => {
+  var userObj = client.guilds.get(GUILD_ID).members.find((val) => {
     return val['user'].username.toLowerCase() == args[0].toLowerCase() && val['user'].discriminator == args[1];
   });
   return userObj.user;
