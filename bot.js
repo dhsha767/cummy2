@@ -163,11 +163,13 @@ function cmd_sql(message) {
   var q = message.content.split(' ');
   q.shift();
   q = q.join(' ');
-  pgClient.query(q).then((res) => {
-    message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
-  }).catch((err) => {
-    message.channel.send(err);
-  });
+  (function () {
+    pgClient.query(q).then((res) => {
+      message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
+    }).catch((err) => {
+      throw err;
+    })
+  })().catch(e => { message.channel.send(e); });
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
