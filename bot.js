@@ -106,8 +106,10 @@ function updateLeaderboard() {
 
 function updateTransactions(sender, reciever, amount, fromMeme) {
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
-  console.log(transactions_msg);
+  var old_fields = transaction_msg.embeds[0].fields;
+  console.log(old_fields);
   var embed = new Discord.RichEmbed()
+    .setColor(0xFFFF00)
     .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions')
     .setTimestamp();
   transactions_msg.edit(embed);
