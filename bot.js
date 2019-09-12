@@ -155,7 +155,7 @@ function cmd_compare(message) {
           .addField((d_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', '1.23 avg. kpm', true)
           .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', '(2.34) avg. kpm', true)
           .addBlankField(true)
-          .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**')
+          .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**', '-')
           .setFooter('kpm = karma per. meme');
         message.channel.send(embed);
       }
