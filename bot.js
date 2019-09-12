@@ -29,13 +29,14 @@ const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?}
   {regex:/^help$/, handler:cmd_help, onlyInGuild:false}, // help docs
   {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false}, // check karma
-  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false} // send karma to another user (by username)
+  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false}, // send karma to another user (by username)
+  {regex:/^compare [\S]{2,32}#[0-9]{4}( [\S]{2,32}#[0-9]{4})?$/, handler:cmd_compare, onlyInGuild:false} // compares two users karma
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '621071935329140778';
 const LEADERBOARD_CHANNEL_ID = '621087939820257300';
-const LEADERBOARD_MESSAGE_ID = '';
+const LEADERBOARD_MESSAGE_ID = '621604987004518419';
 
 // --- --- --- INITS --- --- ---
 
@@ -77,6 +78,11 @@ function findUser(string) { // searches for user by username#discrim and returns
   return userObj.user;
 }
 
+function updateLeaderboard() {
+  var leaderboard_msg = client.channels.get(LEADERBOARD_CHANNEL_ID).messages.get(LEADERBOARD_MESSAGE_ID);
+  leaderboard_msg.edit('r'+Math.random());
+}
+
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
@@ -109,6 +115,10 @@ function cmd_sendkarma(message) {
   }
 }
 
+function cmd_compare(message) {
+  message.channel.send('comparison');
+}
+
 // --- --- --- HOOK FUNCS --- --- ---
 
 function hk_ready() {
@@ -117,7 +127,6 @@ function hk_ready() {
   client.channels.forEach((chan) => {
     if (chan.type == 'text') chan.fetchMessages();
   }); // cache old messages
-  client.channels.get(LEADERBOARD_CHANNEL_ID).send('placeholder message');
 }
 
 function hk_message(message) {
