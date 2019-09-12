@@ -70,9 +70,11 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
   if (amount <= 0) return;
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) return;
-    pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
+    var q = 'update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
     update karma set karma=karma-'+amount+' where uid='+sender.id+';' + (typeof fromMeme=='undefined')?'':'\
-    update karma set karmafrommemes=karmafrommemes' + fromMeme==1?('+'+amount):('-'+amount) + ';').then(res => {
+    update karma set karmafrommemes=karmafrommemes' + fromMeme==1?('+'+amount):('-'+amount) + ';';
+    console.log(q);
+    pgClient.query(q).then(res => {
       updateLeaderboard();
     });
   });
