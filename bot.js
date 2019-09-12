@@ -64,8 +64,8 @@ function getInfo(user) {
 
 function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update karmafrommemes as well
   // fromMeme = undefined => call didnt come from a meme
-  // fromMeme = 1 => reciever gets + 1 ( author )
-  // fromMeme = 2 => sender gets - 1 ( author )
+  // fromMeme = 1 => reciever gets +1 kfm ( author )
+  // fromMeme = 2 => sender gets -1 kfm ( author )
   if (sender == reciever) return; 
   if (amount <= 0) return;
   getInfo(sender).then((info) => {
@@ -145,8 +145,12 @@ function cmd_compare(message) {
         var u2_k = user2_info.rows[0].karma;
         var u1_d = user1_info.rows[0].downvotes;
         var u2_d = user2_info.rows[0].downvotes;
-        var u1_a = 1.23;
-        var u2_a = 2.34;
+        var u1_m = user1_info.rows[0].memes;
+        var u2_m = user2_info.rows[0].memes;
+        var u1_f = user1_info.rows[0].karmafrommemes;
+        var u2_f = user2_info.rows[0].karmafrommemes;
+        var u1_a = u1_f / u1_m;
+        var u2_a = u2_f / u2_m;
         var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
         var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
         var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
@@ -158,11 +162,13 @@ function cmd_compare(message) {
           .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
           .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
           .addBlankField(true)
-          .addField((d_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', '1.23 avg. kpm', true)
-          .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', '(2.34) avg. kpm', true)
+          .addField((d_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', ' memes', true)
+          .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', ' memes', true)
+          .addField(' kfm', ' avg. kpm', true)
+          .addField(' kfm', ' avg. kpm', true)
           .addBlankField(true)
           .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**', '-')
-          .setFooter('kpm = karma per. meme');
+          .setFooter('kpm = karma per. meme, kfm = karma from memes');
         message.channel.send(embed);
       }
       else {
