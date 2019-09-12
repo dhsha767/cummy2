@@ -38,6 +38,8 @@ const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#
 const GUILD_ID = '621071935329140778';
 const LEADERBOARD_CHANNEL_ID = '621087939820257300';
 const LEADERBOARD_MESSAGE_ID = '621604987004518419';
+const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
+const TRANSACTIONS_MESSAGE_ID = '';
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -87,6 +89,11 @@ function findUser(string) { // searches for user by username#discrim and returns
 function updateLeaderboard() {
   var leaderboard_msg = client.channels.get(LEADERBOARD_CHANNEL_ID).messages.get(LEADERBOARD_MESSAGE_ID);
   leaderboard_msg.edit('r'+Math.random());
+}
+
+function updateTransactions() {
+  var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
+  transactions_msg.edit('t'+Math.random());
 }
 
 // --- --- --- CMD FUNCS --- --- ---
@@ -165,9 +172,18 @@ function cmd_sql(message) {
   q = q.join(' ');
   pgClient.query(q).then((res) => {
     if (res.command == 'SELECT') {
-      res.rows.forEach(row => {
-        console.log(row);
+      var msg = '';
+      res.fields.forEach(field => {
+        msg += field + ' | ';
       });
+      msg += '\n';
+      res.rows.forEach(row => {
+        res.fields.forEach(field => {
+          msg += row.field + ' | ';
+        });
+        msg += '\n';
+      });
+      message.channel.send(msg);
     }
     message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
   });
@@ -181,6 +197,7 @@ function hk_ready() {
   client.channels.forEach((chan) => {
     if (chan.type == 'text') chan.fetchMessages();
   }); // cache old messages
+  client.channels.get(TRANSACTIONS_CHANNEL_ID).send('e');
 }
 
 function hk_message(message) {
