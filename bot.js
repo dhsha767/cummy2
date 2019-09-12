@@ -70,7 +70,7 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
   if (amount <= 0) return;
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) return;
-    var q = 'update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';'+(fromMeme===undefined)?'':'update karma set karmafrommemes=karmafrommemes' + fromMeme==1?('+'+amount):('-'+amount) + ';';
+    var q = 'update karma set karma=karma+'+amount+' where uid='+reciever.id+';update karma set karma=karma-'+amount+' where uid='+sender.id+';'+(fromMeme===undefined?'':'update karma set karmafrommemes=karmafrommemes' + fromMeme==1?('+'+amount):('-'+amount)) + ';');
     console.log(q);
     pgClient.query(q).then(res => {
       updateLeaderboard();
@@ -169,7 +169,7 @@ function cmd_compare(message) {
           .addField('? kfm', '? avg. kpm', true)
           .addBlankField(true)
           .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**', '-')
-          .setFooter('kpm = karma per. meme, kfm = karma from memes');
+          .setFooter('kpm = karma per meme, kfm = karma from memes');
         message.channel.send(embed);
       }
       else {
