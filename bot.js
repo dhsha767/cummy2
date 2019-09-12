@@ -164,6 +164,7 @@ function cmd_sql(message) {
   q.shift();
   q.join(' ');
   pgClient.query(q[0]).then((res) => {
+    console.log(res);
     var o = {};
     res.forEach((v,k) => {
       console.log(v + ' ' + k);
