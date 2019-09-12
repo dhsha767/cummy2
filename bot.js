@@ -187,7 +187,8 @@ function hk_message(message) {
     COMMANDS.forEach((COMMAND) => {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
         if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
-        if (COMMAND.onlyByOwner && message.author.id != OWNER_ID) console.log('test'); // this command is only avaliable to owner
+        if (COMMAND.onlyByOwner && message.author.id != OWNER_ID) return; // this command is only avaliable to owner
+        console.log(message.content);
         COMMAND.handler(message); // call the commands' handler function
       }
     });
