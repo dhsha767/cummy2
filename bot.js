@@ -111,11 +111,9 @@ function updateLeaderboard() {
 function updateTransactions(sender, reciever, amount) {
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
   var old_fields = transactions_msg.embeds[0].fields;
-  console.log(old_fields);
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
-    .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions')
-    .setTimestamp();
+    .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions');
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
   embed.addField('_' + sender.username + '#' + sender.discriminator + '_ -> _' + reciever.username + '#' + reciever.discriminator + '_', amount + ' karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
