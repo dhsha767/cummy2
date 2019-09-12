@@ -81,7 +81,7 @@ function cmd_help(message) {
 
 function cmd_karma(message) {
   var target = message.author;
-  var args = message.split(' ');
+  var args = message.content.split(' ');
   if (args > 1) target = findUser(args[1]); // specified user to check
   pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
     message.channel.send(target.username + '#' + target.disciminator + ' has ' + res.rows[0].karma + ' karma.');
