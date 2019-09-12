@@ -64,13 +64,9 @@ function findUser(string) { // searches for user by username#discrim and returns
   var userObj = null;
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
-  userObj = client.guilds.find(GUILD_ID).members.find(val => val.user.username.toLowerCase() == args[0] && val.user.discriminator == args[1]);
-  
-  /*client.guilds.find(GUILD_ID).members.forEach((member) => { // search for reciever by username#discrim (arg[1])
-    if (member.user.username.toLowerCase() == args[0] && member.user.discriminator == args[1]) { // match
-      userObj = member.user;
-    }
-  });*/
+  userObj = client.guilds.find(GUILD_ID).members.find((member) => {
+    return member.user.username == args[0] && member.user.discriminator == args[1];
+  });
   return userObj;
 }
 
