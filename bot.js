@@ -126,13 +126,19 @@ function cmd_compare(message) {
   getInfo(user1).then((user1_info) => {
     getInfo(user2).then((user2_info) => {
       if (user1 != null && user2 != null && user1_info != null && user2_info != null) {
+        var u1_k = user1_info.rows[0].karma;
+        var u2_k = user2.info.rows[0].karma;
+        var u1_d = user1_info.rows[0].downvotes;
+        var u2_d = user2_info.rows[0].downvotes;
+        var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
+        var d_comp = u1_d>u2_d?0:(u1_d<u2_d?1:2); // u1 / u2 / eq
         var embed = new Discord.RichEmbed()
           .setColor('#ffff00')
-          .addTitle('_!compare_')
-          .addField(user1.username + '#' + user1.discriminator, user1_info.rows[0].karma + ' karma', true)
-          .addField(user2.username + '#' + user2.discriminator, user2_info.rows[0].karma + ' karma', true)
-          .addField(user1_info.rows[0].downvotes + ' downvotes', '-', true)
-          .addField(user2_info.rows[0].downvotes + ' downvotes', '-', true);
+          .setTitle('_!compare_')
+          .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
+          .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
+          .addField((k_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', '-', true)
+          .addField((k_comp>0?'('+u2_d+')':u2_d) + ' downvotes', '-', true);
         message.channel.send(embed);
       }
       else {
