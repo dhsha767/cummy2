@@ -104,7 +104,7 @@ function findUser(string) { // searches for user by username#discrim and returns
   return userObj==null ? null : userObj.user;
 }
 
-function getUserByUid(uid) {
+function getUserFromUid(uid) {
   return client.guilds.get(GUILD_ID).members.get(uid); 
 }
 
@@ -118,6 +118,7 @@ function updateLeaderboard() {
     res.rows.forEach(row => {
       var u = getUserFromUid(row.uid);
       embed.addField(i + '. ' + u.username + '#' + u.discriminator, '_' + row.karma + ' karma / ' + row.downvotes + ' downvotes_');
+      i += 1;
     });
     leaderboard_msg.edit(embed);
   });
