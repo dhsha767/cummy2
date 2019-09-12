@@ -40,7 +40,7 @@ const LEADERBOARD_CHANNEL_ID = '621087939820257300';
 const LEADERBOARD_MESSAGE_ID = '621604987004518419';
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
-const OWNER_ID = '333';//'364289961567977472'; // bmdyy#0068
+const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
 
@@ -171,15 +171,14 @@ function cmd_sql(message) {
   q.shift();
   q = q.join(' ');
   pgClient.query(q).then((res) => {
+    var msg = '';
     if (res.command == 'SELECT') {
-      var msg = '';
       res.rows.forEach(row => {
         msg += JSON.stringify(row) + '\n';
-      });
-      message.channel.send(msg);
+      }); 
     }
-    console.log(res);
-    message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
+    msg += res.command + ' : ' + res.rowCount + ' rows affected.';
+    message.channel.send(msg);
   });
 }
 
