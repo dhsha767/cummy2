@@ -31,7 +31,7 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
   {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false, onlyByOwner:false}, // check karma
   {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false, onlyByOwner:false}, // send karma to another user (by username)
   {regex:/^compare [\S]{2,32}#[0-9]{4}( [\S]{2,32}#[0-9]{4})?$/, handler:cmd_compare, onlyInGuild:false, onlyByOwner:false}, // compares two users karma
-  {regex:/^sql .+;$/, handler:cmd_sql, onlyInGuild:false, onlyByOwner:true}
+  {regex:/^sql .+;$/, handler:cmd_sql, onlyInGuild:false, onlyByOwner:true} // run sql commands from discord
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
@@ -166,6 +166,8 @@ function cmd_sql(message) {
   console.log(q);
   pgClient.query(q).then((res) => {
     message.channel.send(res);
+  }).catch((err) => {
+    message.channel.send(err);
   });
 }
 
@@ -188,7 +190,6 @@ function hk_message(message) {
       if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
         if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
         if (COMMAND.onlyByOwner && message.author.id != OWNER_ID) return; // this command is only avaliable to owner
-        console.log(message.content);
         COMMAND.handler(message); // call the commands' handler function
       }
     });
