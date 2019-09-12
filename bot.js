@@ -35,6 +35,7 @@ const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '621071935329140778';
 const LEADERBOARD_CHANNEL_ID = '621087939820257300';
+const LEADERBOARD_MESSAGE_ID = '';
 
 // --- --- --- INITS --- --- ---
 
@@ -116,6 +117,7 @@ function hk_ready() {
   client.channels.forEach((chan) => {
     if (chan.type == 'text') chan.fetchMessages();
   }); // cache old messages
+  client.channels.get(LEADERBOARD_CHANNEL_ID).send('placeholder message');
 }
 
 function hk_message(message) {
