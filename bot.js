@@ -168,10 +168,12 @@ function cmd_sql(message) {
     j.r = function() {
       var o = {};
       res.forEach((v,k) => {
+        console.log(v + ' ' + k);
         o[k] = v;
       });
       return o;
     };
+    console.log(j);
     message.channel.send(JSON.stringify(j));
   });
 }
