@@ -120,7 +120,7 @@ function updateLeaderboard() {
       embed.addField(i + '. ' + u.username + '#' + u.discriminator, '***' + row.karma + '*** _karma,_ ***' + row.downvotes + '*** _downvotes_');
       i += 1;
     });
-    leaderboard_msg.edit(embed);
+    leaderboard_msg.edit('Last updated @ ' + getTimeStamp(), embed);
   });
 }
 
@@ -135,7 +135,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
-  transactions_msg.edit(embed);
+  transactions_msg.edit('Last updated @ ' + getTimeStamp(), embed);
 }
 
 // --- --- --- CMD FUNCS --- --- ---
