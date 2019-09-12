@@ -64,7 +64,7 @@ function findUser(string) { // searches for user by username#discrim and returns
   var userObj = null;
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
-  console.log(client.guilds.find(GUILD_ID).members);
+  console.log(client.guilds.get(GUILD_ID).members);
   /*client.guilds.find(GUILD_ID).members.find(([key, val]) => {
     return val.user.username == args[0] && val.user.discriminator == args[1];
   });*/
