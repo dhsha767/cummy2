@@ -131,16 +131,16 @@ function cmd_compare(message) {
         var u1_d = user1_info.rows[0].downvotes;
         var u2_d = user2_info.rows[0].downvotes;
         var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
-        var d_comp = u1_d>u2_d?0:(u1_d<u2_d?1:2); // u1 / u2 / eq
+        var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
         var embed = new Discord.RichEmbed()
           .setColor('#ffff00')
           .setTitle('_'+message.content+'_')
           .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
           .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
           .addBlankField()
-          .addField((d_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', '-', true)
-          .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', '-', true)
-          .setTimestamp();
+          .addField((d_comp!=1?'('+u2_d+')':u2_d) + ' downvotes', ' avg. kpm', true)
+          .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', 'avg. kpm', true)
+          .setFooter('_kpm = karma per. meme');
         message.channel.send(embed);
       }
       else {
