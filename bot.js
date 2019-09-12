@@ -191,7 +191,7 @@ function cmd_sql(message) {
   q.shift();
   q = q.join(' ');
   pgClient.query(q).then((res) => {
-    var msg = '```json';
+    var msg = '```json\n';
     if (res.command == 'SELECT') {
       res.rows.forEach(row => {
         msg += JSON.stringify(row) + '\n';
