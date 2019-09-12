@@ -190,13 +190,13 @@ function cmd_sql(message) {
   q.shift();
   q = q.join(' ');
   pgClient.query(q).then((res) => {
-    var msg = '';
+    var msg = '```json';
     if (res.command == 'SELECT') {
       res.rows.forEach(row => {
         msg += JSON.stringify(row) + '\n';
       }); 
     }
-    msg += res.command + ' : ' + res.rowCount + ' rows affected.';
+    msg += res.command + ' : ' + res.rowCount + ' rows affected.```';
     message.channel.send(msg);
   });
 }
