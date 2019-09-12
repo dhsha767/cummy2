@@ -163,15 +163,9 @@ function cmd_sql(message) {
   var q = message.content.split(' ');
   q.shift();
   q = q.join(' ');
-  try {
-    pgClient.query(q).then((res) => {
-      message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
-    });
-  } catch (err) {
-    message.channel.send(err);
-    console.log(err);
-  }
-  // see https://medium.com/@JonasJancarik/handling-those-unhandled-promise-rejections-when-using-javascript-async-await-and-ifee-5bac52a0b29f
+  pgClient.query(q).then((res) => {
+    message.channel.send(res.command + ' : ' + res.rowCount + ' rows affected.');
+  });
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
