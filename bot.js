@@ -66,8 +66,8 @@ function findUser(string) { // searches for user by username#discrim and returns
   var args = string.split('#');
   client.guilds.get(GUILD_ID).members.find((val) => {
     console.log(val['user'].username + ' ' + val['user'].discriminator);
-    console.log(val['user'].username == args[0] + ' ' + val['user'].discriminator == args[1]);
-    return val['user'].username == args[0] && val['user'].discriminator == args[1];
+    console.log((val['user'].username == args[0]) + ' ' + (val['user'].discriminator == args[1]));
+    return val['user'].username.toLowerCase() == args[0] && val['user'].discriminator == args[1];
   });
   return userObj;
 }
@@ -84,7 +84,7 @@ function cmd_karma(message) {
   if (args.length > 1) target = findUser(args[1]); // specified user to check
   if (target == null) {
     message.channel.send('Couldn\'t find ' + args[1] + '.');
-  }// didnt find
+  } // didnt find
   else {
     pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
       message.channel.send(target.username + '#' + target.discriminator + ' has ' + res.rows[0].karma + ' karma.');
