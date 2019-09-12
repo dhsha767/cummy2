@@ -72,7 +72,8 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
     if (info.rows[0].karma < amount) return;
     pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
     update karma set karma=karma-'+amount+' where uid='+sender.id+';\
-    '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('+'+amount):('-'+amount)) + ';'))).then(res => {
+    '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('+'+amount):('-'+amount)) + ';')))
+    .then(res => {
       updateLeaderboard();
     });
   });
@@ -167,11 +168,11 @@ function cmd_compare(message) {
             .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
             .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
             .addBlankField(true)
-            .addField((d_comp!=1?'('+u1_d+')':u1_d) + ' downvotes', u1_m + ' memes', true)
-            .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', u2_m + ' memes', true)
+            .addField((d_comp!=1?'('+u1_d+')':u1_d) + ' downvotes', (a_comp!=1?'('+u1_a+')':u1_a) + ' avg. kpm', true)
+            .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', (a_comp>0?'('+u2_a+')':u2_a) + ' avg. kpm', true)
             .addBlankField(true)
-            .addField(u1_f + ' kfm', (a_comp!=1?'('+u1_a+')':u1_a) + ' avg. kpm', true)
-            .addField(u2_f + ' kfm', (a_comp>0?'('+u2_a+')':u2_a) + ' avg. kpm', true)
+            .addField(u1_m + ' memes', u1_f + ' kfm', true)
+            .addField(u2_m + ' memes', u2_f + ' kfm', true)
             .addBlankField(true)
             .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**', '-')
             .setFooter('kpm = karma per meme, kfm = karma from memes');
