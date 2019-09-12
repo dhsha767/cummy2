@@ -60,6 +60,11 @@ function sendKarma(sender, reciever, amount) {
   });
 }
 
+function updateDownvotes(reciever, amount) {
+  if (reciever == null) return;
+  pgClient.query('update karma set downvotes=downvotes'+(amount>=0?'+':'-')+Math.abs(amount)+' where uid='+reciever.id';');
+}
+
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
@@ -83,7 +88,7 @@ function cmd_karma(message) {
     message.channel.send('Couldn\'t find ' + args[1] + '.');
   } else {
     pgClient.query('select * from karma where uid='+target.id+';').then((res) => {
-      message.channel.send(target.username + '#' + target.discriminator + ' has ' + res.rows[0].karma + ' karma.');
+      message.channel.send(target.username + '#' + target.discriminator + ' has ' + res.rows[0].karma + ' karma and ' + res.rows[0].downvotes + ' downvotes.');
     });
   }
 }
@@ -143,7 +148,8 @@ function hk_messageReaction(message, emoji, user, add) {
         else sendKarma(message.author, user, VOTE.value);
       }
       else { // downvote logic
-        
+        if (add) updateDownvotes(message.author, 1);
+        else updateDownvotes(message.author, -1);
       }
     }
   });
