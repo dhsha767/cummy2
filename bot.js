@@ -76,7 +76,7 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
     '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('+'+amount):('-'+amount)) + ';')))
     .then(res => {
       updateLeaderboard();
-      updateTransactions(sender, reciever, amount, fromMeme);
+      updateTransactions(sender, reciever, amount);
     });
   });
 }
@@ -104,7 +104,7 @@ function updateLeaderboard() {
   leaderboard_msg.edit('r'+Math.random());
 }
 
-function updateTransactions(sender, reciever, amount, fromMeme) {
+function updateTransactions(sender, reciever, amount) {
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
   var old_fields = transactions_msg.embeds[0].fields;
   console.log(old_fields);
@@ -112,6 +112,9 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
     .setColor(0xFFFF00)
     .setTitle('Past ' + TRANSACTIONS_MAX_COUNT + ' transactions')
     .setTimestamp();
+  while (old_fields.length > TRANSACTIONS_MAX_COUNT)
+    old_fields.shift();
+  embed.addField('**' + sender.username + '#' + sender.discriminator + '** -> **' + reciever.username + '#' + reciever.discriminator + ' : ' + amount);
   transactions_msg.edit(embed);
 }
 
