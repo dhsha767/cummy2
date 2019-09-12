@@ -128,9 +128,11 @@ function cmd_compare(message) {
       if (user1 != null && user2 != null && user1_info != null && user2_info != null) {
         var embed = new Discord.RichEmbed()
           .setColor('#ffff00')
-          .setTitle(user1.username + '#' + user1.discriminator + ' vs. ' + user2.username + '#' + user2.discriminator)
-          .addField(user1_info.rows[0].karma + ' karma', user1_info.rows[0].downvotes + ' downvotes', true)
-          .addField(user2_info.rows[0].karma + ' karma', user2_info.rows[0].downvotes + ' downvotes', true);
+          .addTitle('_!compare_')
+          .addField(user1.username + '#' + user1.discriminator, user1_info.rows[0].karma + ' karma', true)
+          .addField(user2.username + '#' + user2.discriminator, user2_info.rows[0].karma + ' karma', true)
+          .addField(user1_info.rows[0].downvotes + ' downvotes', '-', true)
+          .addField(user2_info.rows[0].downvotes + ' downvotes', '-', true);
         message.channel.send(embed);
       }
       else {
