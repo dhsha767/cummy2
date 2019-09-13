@@ -137,7 +137,9 @@ function updateLeaderboard() {
         var u = getUserFromUid(res.rows[i].uid);
         var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
         var s = kpm - res.rows[i].downvotes/10;
-        v += '__' + u.username + '#' + u.discriminator + '__ _['+ (Math.round(s * 100)/100) + ']_';
+        v += '__' + u.username + '#' + u.discriminator + '__ ['+ (Math.round(s * 100)/100) + ']';
+        if (res.rows[i].motw>0) v+= ' ' + res.rows[0].motw + '`x Motw`';
+        if (res.rows[i].motd>0) v+= ' ' + res.rows[0].motd + '`x MotD`';
         f = '**' + (Math.round(kpm * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
       } else {
         v += '-'; 
