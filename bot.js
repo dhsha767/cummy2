@@ -257,11 +257,10 @@ function cmd_compare(message) {
             .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
           message.channel.send(embed);
         }
-        else {
-          message.channel.send('_Couldn\'t find one or both of the specified users._');
-        }
       });
     });
+  } else {
+    message.channel.send('_Couldn\'t find one or both of the specified users._'); 
   }
 }
 
