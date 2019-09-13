@@ -5,7 +5,35 @@ _William Moody 10.09.2019_ <br>
 
 ## General
 
-_..._
+**Voting system**
+
+Probably the biggest changes since the old Cummy. Upvotes and downvotes are now stored as seperate counters. Upvoting is no longer free, in that upvoting a meme sends karma from you to the person who posted. Downvotes are only used to calculate position in the leaderboard, and they disappear automatically over time. The 6 ways to vote on a meme are as follows:
+
+1. ?? counts as a downvote.
+2. ?? counts as +1 upvotes.
+3. ?? counts as +10 upvotes.
+4. ?? counts as +25 upvotes.
+5. ?? counts as +50 upvotes.
+6. ?? counts as +100 upvotes.
+
+**Leaderboard ranking**
+
+Leaderboard position is not just based on karma. In my opinion, this was a flaw with the original Cummy which promoted spamming memes. Position is now determined by average karma per meme, number of memes posted, and how long ago the person last posted a meme. More concretely:
+
+1. _Only people who posted in the last 7 days appear on the leaderboard._
+2. _Only people who have posted 10+ memes (total) appear on the leaderboard._
+3. _People who meet conditions 1. and 2. are then ordered by avg. kpm._
+
+_Condition 1_ is to prevent people who posted memes a long time ago from remaining at the top of the leaderboard despite being innactive in recent times. _Condition 2_ is to get a sense of avg. kpm over multiple memes. _Condition 3_ is to promote posting higher quality memes. Spamming low quality memes which get 0 or 1 upvotes will negatively impact the avg. kpm.
+
+**Meme of the day/week**
+
+Cummy2 posts a channel link to the day's/week's most upvoted meme (disregarding downvotes), so that people who are less active can get a quick recap.
+_The day begins at 00:00 GMT Time, and weeks begin on Mondays at the same time._
+
+**Transaction log**
+
+A log of the 10 most recent transactions is updated for all to see if they do desire. Cummy2 does not retain this information, it's mostly just to see where people are sending their karma currently.
 
 ## Commands
 
@@ -40,4 +68,4 @@ Cummy2 runs the issued query on it's database and returns the result in chat. *O
 
 ## API
 
-_..._
+Coming in the future (maybe), is an API for people to write their own bots which work with the karma system with. Getting user info, transferring karma, etc.
