@@ -122,8 +122,10 @@ function updateLeaderboard() {
       var f = '';
       if (i < res.rows.length) {
         var u = getUserFromUid(res.rows[i].uid);
-        v += u.username + '#' + u.discriminator;
-        f = '**' + (Math.round(res.rows[i].karmafrommemes / res.rows[i].memes * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
+        var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
+        var s = 100 * kpm - res.rows[i].downvotes/10;
+        v += u.username + '#' + u.discriminator + ' _['+ (Math.round(s * 100)/100) + ']_';
+        f = '**' + (Math.round(kpm * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
       } else {
         v += '-'; 
         f = '-';
