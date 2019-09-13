@@ -326,7 +326,10 @@ function cmd_sql(message) {
     var msg = '```json\n';
     if (res.command == 'SELECT') {
       res.rows.forEach(row => {
-        msg += JSON.stringify(row) + '\n';
+        var j = JSON.stringify(row);
+        if (j.length > 1990)
+          j = j.subtring(0, 1990) + '...';
+        msg += j + '\n';
       }); 
     }
     msg += res.command + ' : ' + res.rowCount + ' rows affected.```';
