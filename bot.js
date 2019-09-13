@@ -49,7 +49,7 @@ const MOTWD_CHANNEL_ID = '621975142859276290';
 const MOTWD_RESET_TIME = [0, 0, 0]; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 const STARTING_KARMA = 1000; // how much to start everyone with
-var INITIALIZED_UESRS = []; // keep track of users we know are registered, to avoid unecessary sql queries (until next restart of course)
+var INITIALIZED_USERS = []; // keep track of users we know are registered, to avoid unecessary sql queries (until next restart of course)
 
 // --- --- --- INITS --- --- ---
 
