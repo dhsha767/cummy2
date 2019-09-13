@@ -46,7 +46,7 @@ const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
 const MOTWD_CHANNEL_ID = '621975142859276290';
-const MOTWD_RESET_TIME = ['5', '9', '55']; // day, hours, minutes [0-sunday -> 6-saturday]
+const MOTWD_RESET_TIME = ['5', '9', '59']; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -76,11 +76,13 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function issueMemeOfThe(p) {
-  pgClient.query('select * from memes order by upvotes desc'+(p=='Day'?(' where posttime>'+(new Date().getTime() - 1000*60*60*24)):'')+';').then((res) => {
+  var q = 'select * from memes order by upvotes desc'+(p=='Day'?(' where posttime>'+(new Date().getTime() - 1000*60*60*24)):'')+';';
+  console.log(q);
+  pgClient.query(q).then((res) => {
     if (res.rows.length > 0) {
       var m = res.rows[0];
       var l = 'https://discordapp.com/channels/'+GUILD_ID+'/'+m.channelid+'/'+m.messageid;
-      client.channels.get(MOTWD_CHANNEL_ID).send('Meme of the '+p+' goes to <@'+m.author+'>, congratulations! (<' + l + '>)');
+      client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** _['+m.upvotes+' upvotes]_ goes to __<@'+m.author+'>__, congratulations! _(<' + l + '>)_');
     }
   });
 }
