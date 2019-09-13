@@ -7,7 +7,7 @@ _William Moody 10.09.2019_ <br>
 
 **Voting system**
 
-Probably the biggest changes since the old Cummy. Upvotes and downvotes are now stored as seperate counters. Upvoting is no longer free, in that upvoting a meme sends karma from you to the person who posted. Downvotes are only used to calculate position in the leaderboard, and they disappear automatically over time. The 6 ways to vote on a meme are as follows:
+Probably the biggest changes since the old Cummy. Upvotes and downvotes are now stored as seperate counters. Upvoting is no longer free, in that upvoting a meme sends karma from you to the person who posted. Downvotes are only used to calculate position in the leaderboard, and they are reset alongside MotW (every week on Monday @ 00:00 GMT Time). The 6 ways to vote on a meme are as follows:
 
 1. ?? counts as a downvote.
 2. ?? counts as +1 upvotes.
