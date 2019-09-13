@@ -241,6 +241,7 @@ function cmd_compare(message) {
           var w = u1_s>u2_s?user1:(u1_s<u2_s?user2:null);
           var embed = new Discord.RichEmbed()
             .setColor(0xFFFF00)
+            .setTitle('It\'s flexing time 😎')
             .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
             .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
             .addBlankField(true)
