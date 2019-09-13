@@ -154,8 +154,8 @@ function cmd_karma(message) {
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     getInfo(target).then((info) => {
-      var kpm = info.rows[0].memes>0 ? info.rows[0].karmafrommemes / info.rows[0].memes : 0;
-      var lm = (new Date().getTime() - info.rows[0].lastmeme)/1000/60/60; // hours
+      var kpm = info.rows[0].memes>0 ? (Math.round(info.rows[0].karmafrommemes / info.rows[0].memes * 100)/100) : 0;
+      var lm = Math.round((new Date().getTime() - info.rows[0].lastmeme)/1000/60/60 * 100)/100; // hours
       var embed = new Discord.RichEmbed()
         .setColor(0xFFFF00)
         .setTitle(target.username + '#' + target.discriminator)
@@ -197,8 +197,8 @@ function cmd_compare(message) {
           var u2_m = user2_info.rows[0].memes;
           var u1_f = user1_info.rows[0].karmafrommemes;
           var u2_f = user2_info.rows[0].karmafrommemes;
-          var u1_a = u1_m>0 ? u1_f / u1_m : 0;
-          var u2_a = u2_m>0 ? u2_f / u2_m : 0;
+          var u1_a = u1_m>0 ? (Math.round(100 * u1_f / u1_m)/100) : 0;
+          var u2_a = u2_m>0 ? (Math.round(100 * u2_f / u2_m)/100) : 0;
           var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
           var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
           var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
