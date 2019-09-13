@@ -81,17 +81,10 @@ setInterval(() => {
 function initUser(user) {
   console.log('init user ' + user.id);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
-    console.log('already have them');
     return new Promise((resolve, reject) => { resolve(0); });
   } else {
-    console.log('don\'t have them yet (locally)');
     INITIALIZED_USERS.push(user.id);
-    return pgClient.query('select * from karma where uid='+user.id+';').then(res => {
-      if (res.rows.length == 0) {
-        console.log('don\'t have them yet (db)');
-        return pgClient.query('insert into karma (uid, karma) values (' + user.id + ',' + STARTING_KARMA + ');');
-      }
-    });
+    return pgClient.query('insert into karma (uid, karma) values (' + user.id + ',' + STARTING_KARMA + ') on conflict do nothing;');
   }
 }
 
