@@ -68,12 +68,21 @@ setInterval(() => {
     if (d.getDay() == MOTWD_RESET_TIME[0]) {
       // issue MotW and truncate table 
       issueMemeOfThe('Week');
+      resetDownvotes();
       resetMemeTable();
     }
   }
-}, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep ALSO issue motw/d + clear memes table when its time
+}, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep ALSO issue motw/d + clear memes table when its time ALSO decay downvotes
 
 // --- --- --- HELPER FUNCS --- --- ---
+
+function initUser(user) {
+  
+}
+
+function resetDownvotes() {
+  pgClient.query('update karma set downvotes=0;');
+}
 
 function issueMemeOfThe(p) {
   pgClient.query('select * from memes '+(p=='Day'?(' where posttime>'+(new Date().getTime() - 1000*60*60*24)):'')+' order by upvotes desc;').then((res) => {
@@ -101,18 +110,23 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
   // fromMeme = undefined => call didnt come from a meme
   // fromMeme = 1 => reciever gets +1 kfm ( author )
   // fromMeme = 2 => sender gets -1 kfm ( author )
-  if (sender == reciever) return; 
-  if (amount <= 0) return;
+  if (sender == reciever) return -1; 
+  if (amount <= 0) return -1;
+  var ret = 0;
   getInfo(sender).then((info) => {
-    if (info.rows[0].karma < amount) return;
-    pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
-    update karma set karma=karma-'+amount+' where uid='+sender.id+';\
-    '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('-'+amount):('+'+amount)) + ' where uid='+(fromMeme==1?sender.id:reciever.id)+';')))
-    .then(res => {
-      updateLeaderboard();
-      updateTransactions(sender, reciever, amount, fromMeme);
-    });
+    if (info.rows[0].karma < amount)
+      ret = -1;
+    else {
+      pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
+      update karma set karma=karma-'+amount+' where uid='+sender.id+';\
+      '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('-'+amount):('+'+amount)) + ' where uid='+(fromMeme==1?sender.id:reciever.id)+';')))
+      .then(res => {
+        updateLeaderboard();
+        updateTransactions(sender, reciever, amount, fromMeme);
+      });
+    }
   });
+  return ret;
 }
 function updateDownvotes(reciever, amount) {
   if (reciever == null) return;
@@ -128,7 +142,7 @@ function updateMemeTable(message, value, add) {
   pgClient.query('update memes set upvotes=upvotes'+(add?'+':'-')+value+' where messageid=' + message.id + ';');
 }
 
-function resetMemeTable() { // TO-DO add logic to call this function
+function resetMemeTable() {
   pgClient.query('truncate table memes;');
 }
 
@@ -231,8 +245,10 @@ function cmd_sendkarma(message) {
     return;
   } else {
     var amount = parseInt(args[2]);
-    sendKarma(message.author, reciever_userObj, amount);
-    message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._');
+    if (sendKarma(message.author, reciever_userObj, amount) > 0)
+      message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._');
+    else
+      message.channel.send('Error completing request.');
   }
 }
 
