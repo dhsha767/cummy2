@@ -112,7 +112,8 @@ function updateLeaderboard() {
   var leaderboard_msg = client.channels.get(LEADERBOARD_CHANNEL_ID).messages.get(LEADERBOARD_MESSAGE_ID);
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
-    .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS');
+    .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS')
+    .setDescription(HELP_URL);
   pgClient.query('select * from karma order by karma-downvotes desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
     var i = 1;
     res.rows.forEach(row => {
