@@ -125,7 +125,7 @@ function updateLeaderboard() {
         var u = getUserFromUid(res.rows[i].uid);
         var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
         var s = kpm - res.rows[i].downvotes/10;
-        v += u.username + '#' + u.discriminator + ' _('+ (Math.round(s * 100)/100) + ')_';
+        v += '__' + u.username + '#' + u.discriminator + '__ _['+ (Math.round(s * 100)/100) + ']_';
         f = '**' + (Math.round(kpm * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
       } else {
         v += '-'; 
