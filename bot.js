@@ -115,7 +115,8 @@ function updateLeaderboard() {
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS')
-    .setDescription(HELP_URL); 
+    .setDescription(HELP_URL)
+    .setFooter('[xx.xx] is adjusted average karma per meme'); 
   pgClient.query('select * from karma where lastmeme>=' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>=' + LEADERBOARD_MIN_MEMES + ' order by karmafrommemes/memes-downvotes/10 desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
     for (var i = 0; i < LEADERBOARD_MAX_COUNT; i+=1) {
       var v = (i+1) + '. ';
@@ -124,7 +125,7 @@ function updateLeaderboard() {
         var u = getUserFromUid(res.rows[i].uid);
         var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
         var s = kpm - res.rows[i].downvotes/10;
-        v += u.username + '#' + u.discriminator + ' _['+ (Math.round(s * 100)/100) + ' adj. avg. kpm]_';
+        v += u.username + '#' + u.discriminator + ' _('+ (Math.round(s * 100)/100) + ')_';
         f = '**' + (Math.round(kpm * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
       } else {
         v += '-'; 
