@@ -79,7 +79,6 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function initUser(user) {
-  console.log('init user ' + user.id);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     return new Promise((resolve, reject) => { resolve(0); });
   } else {
@@ -141,11 +140,13 @@ function updateDownvotes(reciever, amount) {
 }
 
 function addToMemeTable(message) {
-  pgClient.query('insert into memes (channelid, messageid, author, posttime) values ('+message.channel.id+','+message.id+','+message.author.id+','+(new Date().getTime())+');');
+  return pgClient.query('insert into memes (channelid, messageid, author, posttime) values ('+message.channel.id+','+message.id+','+message.author.id+','+(new Date().getTime())+') on conflict do nothing;');
 }
 
 function updateMemeTable(message, value, add) {
-  pgClient.query('update memes set upvotes=upvotes'+(add?'+':'-')+value+' where messageid=' + message.id + ';');
+  addToMemeTable(message).then(ret => {
+    pgClient.query('update memes set upvotes=upvotes'+(add?'+':'-')+value+' where messageid=' + message.id + ';');
+  });
 }
 
 function resetMemeTable() {
