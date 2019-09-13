@@ -80,7 +80,6 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function initUser(user) {
-  console.log('INIT USER ' + client.guilds.get(GUILD_ID).members.get(user.id).user.username);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     return new Promise((resolve, reject) => { resolve(0); });
   } else {
@@ -330,8 +329,8 @@ function cmd_sql(message) {
     if (res.command == 'SELECT') {
       res.rows.forEach(row => {
         var j = JSON.stringify(row);
-        if (j.length > 1950) // discord only allows 2000 chars max
-          j = j.substring(0, 1950) + '...';
+        if (j.length > 1900) // discord only allows 2000 chars max
+          j = j.substring(0, 1900) + '...';
         msg += j + '\n';
       }); 
     }
