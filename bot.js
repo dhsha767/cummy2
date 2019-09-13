@@ -112,7 +112,7 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
   // fromMeme = 2 => sender gets -1 kfm ( author )
   if (sender == reciever) return -1; 
   if (amount <= 0) return -1;
-  var ret = 0;
+  var ret = 1;
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount)
       ret = -1;
@@ -248,7 +248,7 @@ function cmd_sendkarma(message) {
     if (sendKarma(message.author, reciever_userObj, amount) > 0)
       message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._');
     else
-      message.channel.send('Error completing request.');
+      message.channel.send('_Error completing request._');
   }
 }
 
