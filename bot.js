@@ -45,6 +45,7 @@ const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
+const MOTWD_RESET_TIME = ['5', '12', '22']; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -59,7 +60,17 @@ client.login(process.env.BOT_TOKEN); // login to discord api
 
 setInterval(() => {
   http.get(KEEPALIVE_URL);
-}, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep
+  var d = new Date();
+  if (d.getHours() == MOTWD_RESET_TIME[1] && (d.getMinutes() > MOTWD_RESET_TIME[2] && d.getMinutes() < MOTWD_RESET_TIME[2] + KEEPALIVE_INTERVAL/60/1000)) {
+    if (d.getDay() == MOTWD_RESET_TIME[0]) {
+      // issue MotW and truncate table 
+      console.log('motw award');
+      resetMemeTable();
+    }
+    // issue MotD
+    console.log('motd award');
+  }
+}, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep ALSO clear memes table when its time
 
 // --- --- --- HELPER FUNCS --- --- ---
 
