@@ -48,6 +48,8 @@ const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
 const MOTWD_CHANNEL_ID = '621975142859276290';
 const MOTWD_RESET_TIME = [0, 0, 0]; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
+const STARTING_KARMA = 1000; // how much to start everyone with
+var INITIALIZED_UESRS = []; // keep track of users we know are registered, to avoid unecessary sql queries (until next restart of course)
 
 // --- --- --- INITS --- --- ---
 
@@ -77,7 +79,18 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function initUser(user) {
-  
+  if (INITIALIZED_USERS.contains(user.id)) {
+    console.log('already have him in list');
+    return new Promise((resolve, reject) => { resolve(0); });
+  } else {
+    INITIALIZED_USERS.push(user.id);
+    return pgClient.query('select * from karma where uid='+user.id+';').then(res => {
+      if (res.rows.length == 0) {
+        console.log('need to insert');
+        pgClient.query('insert into karma (uid, karma) values (' + user.id + ',' + STARTING_KARMA + ');');
+      }
+    });
+  }
 }
 
 function resetDownvotes() {
@@ -219,18 +232,20 @@ function cmd_karma(message) {
   if (target == null) { // didnt find
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
-    getInfo(target).then((info) => {
-      var kpm = info.rows[0].memes>0 ? (Math.round(100 * info.rows[0].karmafrommemes / info.rows[0].memes - info.rows[0].downvotes/AAKPM_DOWNVOTE_COEFF )/100) : 0;
-      var lm = Math.round((new Date().getTime() - info.rows[0].lastmeme)/1000/60/60 * 100)/100; // hours
-      var embed = new Discord.RichEmbed()
-        .setColor(0xFFFF00)
-        .setTitle(target.username + '#' + target.discriminator)
-        .addField(info.rows[0].karma + ' karma', info.rows[0].downvotes + ' downvotes')
-        .addField(kpm + ' kpm', info.rows[0].memes + ' memes')
-        .addField(info.rows[0].karmafrommemes + ' kfm', 'last meme: ' + lm + ' hrs ago')
-        .addField(info.rows[0].motw + 'x MotW', info.rows[0].motd + 'x MotD')
-        .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
-      message.channel.send(embed);
+    initUser(target).then(init_res => {
+      getInfo(target).then((info) => {
+        var kpm = info.rows[0].memes>0 ? (Math.round(100 * info.rows[0].karmafrommemes / info.rows[0].memes - info.rows[0].downvotes/AAKPM_DOWNVOTE_COEFF )/100) : 0;
+        var lm = Math.round((new Date().getTime() - info.rows[0].lastmeme)/1000/60/60 * 100)/100; // hours
+        var embed = new Discord.RichEmbed()
+          .setColor(0xFFFF00)
+          .setTitle(target.username + '#' + target.discriminator)
+          .addField(info.rows[0].karma + ' karma', info.rows[0].downvotes + ' downvotes')
+          .addField(kpm + ' kpm', info.rows[0].memes + ' memes')
+          .addField(info.rows[0].karmafrommemes + ' kfm', 'last meme: ' + lm + ' hrs ago')
+          .addField(info.rows[0].motw + 'x MotW', info.rows[0].motd + 'x MotD')
+          .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
+        message.channel.send(embed);
+      });
     });
   }
 }
@@ -238,65 +253,73 @@ function cmd_karma(message) {
 function cmd_sendkarma(message) {
   var args = message.content.split(' ');
   var reciever_userObj = findUser(args[1]);
-  if (reciever_userObj == null) { // didnt find
-    message.channel.send('_Couldn\'t find ' + args[1] + '._');
-    return;
-  } else {
-    var amount = parseInt(args[2]);
-    message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
-  }
+  initUser(message.author).then(init1_res => {
+    initUser(reciever_userObj).then(init2_res => {
+      if (reciever_userObj == null) { // didnt find
+        message.channel.send('_Couldn\'t find ' + args[1] + '._');
+        return;
+      } else {
+        var amount = parseInt(args[2]);
+        message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
+      }
+    });
+  });
 }
 
 function cmd_compare(message) {
   var args = message.content.split(' ');
   var user1 = findUser(args[1]);
   var user2 = args.length > 2 ? findUser(args[2]) : message.author;
-  if (user1 != null && user2 != null) {
-    getInfo(user1).then((user1_info) => {
-      getInfo(user2).then((user2_info) => {
-        if (user1_info != null && user2_info != null) {
-          var u1_k = user1_info.rows[0].karma;
-          var u2_k = user2_info.rows[0].karma;
-          var u1_d = user1_info.rows[0].downvotes;
-          var u2_d = user2_info.rows[0].downvotes;
-          var u1_m = user1_info.rows[0].memes;
-          var u2_m = user2_info.rows[0].memes;
-          var u1_f = user1_info.rows[0].karmafrommemes;
-          var u2_f = user2_info.rows[0].karmafrommemes;
-          var u1_w = user1_info.rows[0].motw;
-          var u2_w = user2_info.rows[0].motw;
-          var u1_t = user1_info.rows[0].motd;
-          var u2_t = user2_info.rows[0].motd;
-          var u1_a = u1_m>0 ? (Math.round(100 * (u1_f / u1_m - u1_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
-          var u2_a = u2_m>0 ? (Math.round(100 * (u2_f / u2_m - u2_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
-          var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
-          var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
-          var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
-          var w_comp = u1_w>u2_w?0:(u1_w<u2_w?1:2); // u1 / u2 / eq
-          var t_comp = u1_t>u2_t?0:(u1_t<u2_t?1:2); // u1 / u2 / eq
-          var embed = new Discord.RichEmbed()
-            .setColor(0xFFFF00)
-            .setTitle('It\'s flexing time 😎')
-            .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'__'+u1_k+'__':u1_k) + ' karma', true)
-            .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'__'+u2_k+'__':u2_k) + ' karma', true)
-            .addBlankField(true)
-            .addField((d_comp!=1?'__'+u1_d+'__':u1_d) + ' downvotes', (a_comp!=1?'__'+u1_a+'__':u1_a) + ' adj. avg. kpm', true)
-            .addField((d_comp>0?'__'+u2_d+'__':u2_d) + ' downvotes', (a_comp>0?'__'+u2_a+'__':u2_a) + ' adj. avg. kpm', true)
-            .addBlankField(true)
-            .addField(u1_m + ' memes', u1_f + ' kfm', true)
-            .addField(u2_m + ' memes', u2_f + ' kfm', true)
-            .addBlankField(true)
-            .addField((w_comp!=1?'__'+u1_w+'__':u1_w) + 'x motw', (t_comp!=1?'__'+u1_t+'__':u1_t) + 'x motd', true)
-            .addField((w_comp>0?'__'+u2_w+'__':u2_w) + 'x motw', (t_comp>0?'__'+u2_t+'__':u2_t) + 'x motd', true)
-            .addBlankField(true)
-            .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
-          message.channel.send(embed);
-        }
-      });
+  initUser(user1).then(init1_res => {
+    initUser(user2).then(init2_res => {
+      if (user1 != null && user2 != null) {
+        getInfo(user1).then((user1_info) => {
+          getInfo(user2).then((user2_info) => {
+            if (user1_info != null && user2_info != null) {
+              var u1_k = user1_info.rows[0].karma;
+              var u2_k = user2_info.rows[0].karma;
+              var u1_d = user1_info.rows[0].downvotes;
+              var u2_d = user2_info.rows[0].downvotes;
+              var u1_m = user1_info.rows[0].memes;
+              var u2_m = user2_info.rows[0].memes;
+              var u1_f = user1_info.rows[0].karmafrommemes;
+              var u2_f = user2_info.rows[0].karmafrommemes;
+              var u1_w = user1_info.rows[0].motw;
+              var u2_w = user2_info.rows[0].motw;
+              var u1_t = user1_info.rows[0].motd;
+              var u2_t = user2_info.rows[0].motd;
+              var u1_a = u1_m>0 ? (Math.round(100 * (u1_f / u1_m - u1_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
+              var u2_a = u2_m>0 ? (Math.round(100 * (u2_f / u2_m - u2_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
+              var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
+              var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
+              var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
+              var w_comp = u1_w>u2_w?0:(u1_w<u2_w?1:2); // u1 / u2 / eq
+              var t_comp = u1_t>u2_t?0:(u1_t<u2_t?1:2); // u1 / u2 / eq
+              var embed = new Discord.RichEmbed()
+                .setColor(0xFFFF00)
+                .setTitle('It\'s flexing time 😎')
+                .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'__'+u1_k+'__':u1_k) + ' karma', true)
+                .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'__'+u2_k+'__':u2_k) + ' karma', true)
+                .addBlankField(true)
+                .addField((d_comp!=1?'__'+u1_d+'__':u1_d) + ' downvotes', (a_comp!=1?'__'+u1_a+'__':u1_a) + ' adj. avg. kpm', true)
+                .addField((d_comp>0?'__'+u2_d+'__':u2_d) + ' downvotes', (a_comp>0?'__'+u2_a+'__':u2_a) + ' adj. avg. kpm', true)
+                .addBlankField(true)
+                .addField(u1_m + ' memes', u1_f + ' kfm', true)
+                .addField(u2_m + ' memes', u2_f + ' kfm', true)
+                .addBlankField(true)
+                .addField((w_comp!=1?'__'+u1_w+'__':u1_w) + 'x motw', (t_comp!=1?'__'+u1_t+'__':u1_t) + 'x motd', true)
+                .addField((w_comp>0?'__'+u2_w+'__':u2_w) + 'x motw', (t_comp>0?'__'+u2_t+'__':u2_t) + 'x motd', true)
+                .addBlankField(true)
+                .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
+              message.channel.send(embed);
+            }
+          });
+        });
+      } else {
+        message.channel.send('_Couldn\'t find one or both of the specified users._'); 
+      }
     });
-  } else {
-    message.channel.send('_Couldn\'t find one or both of the specified users._'); 
-  }
+  });
 }
 
 function cmd_sql(message) {
@@ -326,43 +349,49 @@ function hk_ready() {
 }
 
 function hk_message(message) {
-  if (message.author.id == client.user.id) return; // ignore own messages
-  if (message.system) return; // ignore messages sent by discord
-  
-  if (message.content.startsWith(COMMAND_PREFIX)) { // we may be dealing with a command
-    COMMANDS.forEach((COMMAND) => {
-      if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
-        if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
-        if (COMMAND.onlyByOwner && message.author.id != OWNER_ID) return; // this command is only avaliable to owner
-        COMMAND.handler(message); // call the commands' handler function
-      }
-    });
-  }
-  
-  if (message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null) {
-    // this classifies as a meme! (has embed OR has attachment OR has url)
-    VOTES.forEach((VOTE) => { // react with default votes
-      if (VOTE.isDefault) message.react(VOTE.id);
-    });
-    updateMemeCount(message.author);
-    addToMemeTable(message);
-  }
+  initUser(message.author).then(init_res => {
+    if (message.author.id == client.user.id) return; // ignore own messages
+    if (message.system) return; // ignore messages sent by discord
+
+    if (message.content.startsWith(COMMAND_PREFIX)) { // we may be dealing with a command
+      COMMANDS.forEach((COMMAND) => {
+        if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
+          if (COMMAND.onlyInGuilds && message.guild == null) return; // this command is only handled in server chat
+          if (COMMAND.onlyByOwner && message.author.id != OWNER_ID) return; // this command is only avaliable to owner
+          COMMAND.handler(message); // call the commands' handler function
+        }
+      });
+    }
+
+    if (message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null) {
+      // this classifies as a meme! (has embed OR has attachment OR has url)
+      VOTES.forEach((VOTE) => { // react with default votes
+        if (VOTE.isDefault) message.react(VOTE.id);
+      });
+      updateMemeCount(message.author);
+      addToMemeTable(message);
+    }
+  });
 }
 
 function hk_messageReaction(message, emoji, user, add) {
-  if (user.id == client.user.id) return; // ignore reactions from cummy
-  if (user.id == message.author.id) return; // ignore reactions from message author
-  if (message.channel.type == 'dm') return; // ignore reactions in dms
-  
-  VOTES.forEach((VOTE) => { // check if reaction is a vote
-    if (VOTE.name == emoji.name) { // we have a match!
-      if (VOTE.value > 0) { // upvote logic
-        add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
-        updateMemeTable(message, VOTE.value, add);
-      } else { // downvote logic
-        updateDownvotes(message.author, add?1:-1);
-      }
-    }
+  initUser(message.author).then(init1_res => {
+    initUser(user).then(init2_res => {
+      if (user.id == client.user.id) return; // ignore reactions from cummy
+      if (user.id == message.author.id) return; // ignore reactions from message author
+      if (message.channel.type == 'dm') return; // ignore reactions in dms
+
+      VOTES.forEach((VOTE) => { // check if reaction is a vote
+        if (VOTE.name == emoji.name) { // we have a match!
+          if (VOTE.value > 0) { // upvote logic
+            add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
+            updateMemeTable(message, VOTE.value, add);
+          } else { // downvote logic
+            updateDownvotes(message.author, add?1:-1);
+          }
+        }
+      });
+    });
   });
 }
 
