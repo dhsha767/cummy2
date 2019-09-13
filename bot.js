@@ -61,6 +61,7 @@ client.login(process.env.BOT_TOKEN); // login to discord api
 setInterval(() => {
   http.get(KEEPALIVE_URL);
   var d = new Date();
+  console.log(d.getHours() + ' ' + d.getMinutes());
   if (d.getHours() == MOTWD_RESET_TIME[1] && (d.getMinutes() > MOTWD_RESET_TIME[2] && d.getMinutes() < MOTWD_RESET_TIME[2] + KEEPALIVE_INTERVAL/60/1000)) {
     if (d.getDay() == MOTWD_RESET_TIME[0]) {
       // issue MotW and truncate table 
