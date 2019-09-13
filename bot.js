@@ -15,7 +15,7 @@ const http = require('http'); // http requests (for the heartbeat)
 
 const HELP_URL = "https://github.com/bmdyy/cummy2/blob/master/README.md";
 const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
-const KEEPALIVE_INTERVAL = 1 * 60 * 1000; // in milliseconds
+const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'pornhub.com/gay'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
   {name:'👎', id:'👎', value:-1, isDefault:true},
@@ -45,7 +45,7 @@ const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
-const MOTWD_RESET_TIME = ['5', '9', '31']; // day, hours, minutes [0-sunday -> 6-saturday]
+const MOTWD_RESET_TIME = ['5', '9', '33']; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
