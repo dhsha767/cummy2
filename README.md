@@ -22,7 +22,7 @@ Leaderboard position is not just based on karma. In my opinion, this was a flaw 
 
 1. _Only people who posted in the last 7 days appear on the leaderboard._
 2. _Only people who have posted 5+ memes (total) appear on the leaderboard._
-3. _People who meet conditions 1. and 2. are then ordered by avg. kpm._
+3. _People who meet conditions 1. and 2. are then ordered by `A = a-(d/10)` (A = adjusted average karma per meme) where a is avg. kpm and d is downvotes._
 
 _Condition 1_ is to prevent people who posted memes a long time ago from remaining at the top of the leaderboard despite being innactive in recent times. _Condition 2_ is to get a sense of avg. kpm over multiple memes. _Condition 3_ is to promote posting higher quality memes. Spamming low quality memes which get 0 or 1 upvotes will negatively impact the avg. kpm.
 
