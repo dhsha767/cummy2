@@ -325,6 +325,7 @@ function cmd_sql(message) {
   q.shift();
   q = q.join(' ');
   pgClient.query(q).then((res) => {
+    INITIALIZED_USERS = []; // to avoid a specific bug that shouldn't appear in final release anyways.
     var msg = '```json\n';
     if (res.command == 'SELECT') {
       res.rows.forEach(row => {
