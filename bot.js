@@ -46,7 +46,7 @@ const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
 const MOTWD_CHANNEL_ID = '621975142859276290';
-const MOTWD_RESET_TIME = ['5', '9', '59']; // day, hours, minutes [0-sunday -> 6-saturday]
+const MOTWD_RESET_TIME = ['5', '10', '04']; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -62,7 +62,7 @@ client.login(process.env.BOT_TOKEN); // login to discord api
 setInterval(() => {
   http.get(KEEPALIVE_URL);
   var d = new Date();
-  if (d.getHours() == MOTWD_RESET_TIME[1] && (d.getMinutes() >= MOTWD_RESET_TIME[2] && d.getMinutes() <= MOTWD_RESET_TIME[2] + KEEPALIVE_INTERVAL/60000)) {
+  if (d.getHours() == MOTWD_RESET_TIME[1] && (d.getMinutes() >= MOTWD_RESET_TIME[2] && d.getMinutes() < MOTWD_RESET_TIME[2] + KEEPALIVE_INTERVAL/60000)) {
     // issue MotD
     issueMemeOfThe('Day');
     if (d.getDay() == MOTWD_RESET_TIME[0]) {
