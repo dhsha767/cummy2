@@ -20,9 +20,9 @@ const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'pornhub.com/gay'}}; 
 const VOTES = [ // {emoji name, value, reacted by default}
   {name:'👎', id:'👎', value:-1, isDefault:true},
   {name:'👍', id:'👍', value:1, isDefault:true},
-  {name:'🔥', id:'🔥', value:5, isDefault:false},
-  {name:'😳', id:'😳', value:10, isDefault:false},
-  {name:'🙈', id:'🙈', value:25, isDefault:false},
+  {name:'🔥', id:'🔥', value:10, isDefault:false},
+  {name:'😳', id:'😳', value:25, isDefault:false},
+  {name:'🙈', id:'🙈', value:50, isDefault:false},
   {name:'💍', id:'💍', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
@@ -39,6 +39,8 @@ const GUILD_ID = '621071935329140778';
 const LEADERBOARD_CHANNEL_ID = '621087939820257300';
 const LEADERBOARD_MESSAGE_ID = '621604987004518419';
 const LEADERBOARD_MAX_COUNT = 10;
+const LEADERBOARD_MAX_TIME_SINCE_LAST_MEME = 7 * 24 * 60 * 60 * 1000; // 7 days
+const LEADERBOARD_MIN_MEMES = 10;
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
@@ -113,12 +115,24 @@ function updateLeaderboard() {
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS')
-    .setDescription(HELP_URL);
-  pgClient.query('select * from karma order by karma-downvotes desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
-    var i = 1;
+    .setDescription(HELP_URL); 
+  pgClient.query('select * from karma where lastmeme>' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>' + LEADERBOARD_MIN_MEMES + ' orderby karmafrommemes/memes desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
+    for (var i = 0; i < LEADERBOARD_MAX_COUNT; i+=1) {
+      var v = (i+1) + '. ';
+      var f = '';
+      if (i < res.rows.length) {
+        var u = getUserFromUid(res.rows[i].uid);
+        v += u.username + '#' + u.discriminator;
+        f = '**' + (Math.round(res.rows[0].karmafrommemes / res.rows[0].memes * 100)/100) + '** avg. kpm, **' + row.karma + '** karma, **' + row.downvotes + '** downvotes';
+      } else {
+        v += '-'; 
+        f = '-';
+      }
+      embed.addField(v, f, false); 
+    }
     res.rows.forEach(row => {
       var u = getUserFromUid(row.uid);
-      embed.addField(i + '. ' + u.username + '#' + u.discriminator, '**' + row.karma + '** karma, **' + row.downvotes + '** downvotes');
+      embed.addField(i + '. ' + );
       i += 1;
     });
     leaderboard_msg.edit('Last updated @ ' + getTimeStamp(), embed);
