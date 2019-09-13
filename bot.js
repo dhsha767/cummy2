@@ -344,9 +344,10 @@ function cmd_js(message) {
   var q = message.content.split(' ');
   q.shift();
   q = q.join(' ');
-  var ret = eval(q);
+  var ret = '```json\n' + eval(q);
   if (ret.length > 1950) ret.substring(0, 1950);
-  message.channel.send('```json\n' + ret + '\n```');
+  ret += '\n```';
+  message.channel.send(ret);
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
