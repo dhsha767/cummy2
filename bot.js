@@ -46,7 +46,7 @@ const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
 const MOTWD_CHANNEL_ID = '621975142859276290';
-const MOTWD_RESET_TIME = [0, 10, 23]; // day, hours, minutes [0-sunday -> 6-saturday]
+const MOTWD_RESET_TIME = [0, 0, 0]; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -77,12 +77,15 @@ setInterval(() => {
 
 function issueMemeOfThe(p) {
   pgClient.query('select * from memes '+(p=='Day'?(' where posttime>'+(new Date().getTime() - 1000*60*60*24)):'')+' order by upvotes desc;').then((res) => {
-    if (res.rows.length == 0) return;
-    var m = res.rows[0];
-    var l = 'https://discordapp.com/channels/'+GUILD_ID+'/'+m.channelid+'/'+m.messageid;
-    client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** ['+m.upvotes+' upvotes] goes to <@'+m.author+'>, congratulations!\n_<' + l + '>_\n_Total memes posted this ' + p + ': ' + res.rows.length + '_\n---');
-    var c = p=='Day'?'motd':'motw';
-    pgClient.query('update karma set '+c+'='+c+'+1 where uid='+m.author+';');
+    if (res.rows.length == 0) {
+      client.channels.get(MOTWD_CHANNEL_ID).send('Sadly, there is no Meme of the '+p+' this time, as nothing was posted.');
+    } else {
+      var m = res.rows[0];
+      var l = 'https://discordapp.com/channels/'+GUILD_ID+'/'+m.channelid+'/'+m.messageid;
+      client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** ['+m.upvotes+' upvotes] goes to <@'+m.author+'>, congratulations!\n_<' + l + '>_\n_Total memes posted this ' + p + ': ' + res.rows.length + '_\n---');
+      var c = p=='Day'?'motd':'motw';
+      pgClient.query('update karma set '+c+'='+c+'+1 where uid='+m.author+';');
+    }
   });
 }
 
@@ -104,7 +107,7 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
     if (info.rows[0].karma < amount) return;
     pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
     update karma set karma=karma-'+amount+' where uid='+sender.id+';\
-    '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('+'+amount):('-'+amount)) + ';')))
+    '+(fromMeme===undefined?'':('update karma set karmafrommemes=karmafrommemes'+(fromMeme==1?('-'+amount):('+'+amount)) + ';')))
     .then(res => {
       updateLeaderboard();
       updateTransactions(sender, reciever, amount, fromMeme);
