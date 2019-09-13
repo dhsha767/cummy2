@@ -253,8 +253,8 @@ function cmd_compare(message) {
             .addField((w_comp!=1?'('+u1_w+')':u1_w) + 'x motw', (t_comp!=1?'('+u1_t+')':u1_t) + 'x motd', true)
             .addField((w_comp>0?'('+u2_w+')':u2_w) + 'x motw', (t_comp>0?'('+u2_t+')':u2_t) + 'x motd', true)
             .addBlankField(true)
-            .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**', '-')
-            .setFooter('kpm = karma per meme, kfm = karma from memes');
+            .addField('-', 'Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**')
+            .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
           message.channel.send(embed);
         }
         else {
