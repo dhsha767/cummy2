@@ -331,7 +331,7 @@ function cmd_sql(message) {
         msg += JSON.stringify(row) + '\n';
       }); 
     }
-    if (msg.length > 1950) msg = msg.substring(0, 1950) + '...';
+    if (msg.length > 1950) msg = msg.substring(0, 1950) + '...\n';
     msg += res.command + ' : ' + res.rowCount + ' rows affected.```';
     message.channel.send(msg);
   });
