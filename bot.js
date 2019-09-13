@@ -62,7 +62,7 @@ client.login(process.env.BOT_TOKEN); // login to discord api
 setInterval(() => {
   http.get(KEEPALIVE_URL);
   var d = new Date();
-  if (d.getHours() == MOTWD_RESET_TIME[1] && (d.getMinutes() >= MOTWD_RESET_TIME[2] && d.getMinutes() <= MOTWD_RESET_TIME[2] + KEEPALIVE_INTERVAL/60/1000)) {
+  if (d.getHours() == MOTWD_RESET_TIME[1] && (d.getMinutes() >= MOTWD_RESET_TIME[2] && d.getMinutes() <= MOTWD_RESET_TIME[2] + KEEPALIVE_INTERVAL/60000)) {
     // issue MotD
     issueMemeOfThe('Day');
     if (d.getDay() == MOTWD_RESET_TIME[0]) {
@@ -76,13 +76,13 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function issueMemeOfThe(p) {
-  var q = 'select * from memes order by upvotes desc'+(p=='Day'?(' where posttime>'+(new Date().getTime() - 1000*60*60*24)):'')+';';
+  var q = 'select * from memes '+(p=='Day'?(' where posttime>'+(new Date().getTime() - 1000*60*60*24)):'')+' order by upvotes desc;';
   console.log(q);
   pgClient.query(q).then((res) => {
     if (res.rows.length > 0) {
       var m = res.rows[0];
       var l = 'https://discordapp.com/channels/'+GUILD_ID+'/'+m.channelid+'/'+m.messageid;
-      client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** _['+m.upvotes+' upvotes]_ goes to __<@'+m.author+'>__, congratulations! _(<' + l + '>)_');
+      client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** ['+m.upvotes+' upvotes] goes to <@'+m.author+'>, congratulations! _(<' + l + '>)_\n_Total memes posted this ' + p + ': ' + res.rows.length + '_');
     }
   });
 }
