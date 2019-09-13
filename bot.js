@@ -45,7 +45,7 @@ const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
-const MOTWD_RESET_TIME = ['5', '12', '22']; // day, hours, minutes [0-sunday -> 6-saturday]
+const MOTWD_RESET_TIME = ['5', '9', '29']; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
