@@ -268,56 +268,56 @@ function cmd_compare(message) {
   var args = message.content.split(' ');
   var user1 = findUser(args[1]);
   var user2 = args.length > 2 ? findUser(args[2]) : message.author;
-  initUser(user1).then(init1_res => {
-    initUser(user2).then(init2_res => {
-      if (user1 != null && user2 != null) {
-        getInfo(user1).then((user1_info) => {
-          getInfo(user2).then((user2_info) => {
-            if (user1_info != null && user2_info != null) {
-              var u1_k = user1_info.rows[0].karma;
-              var u2_k = user2_info.rows[0].karma;
-              var u1_d = user1_info.rows[0].downvotes;
-              var u2_d = user2_info.rows[0].downvotes;
-              var u1_m = user1_info.rows[0].memes;
-              var u2_m = user2_info.rows[0].memes;
-              var u1_f = user1_info.rows[0].karmafrommemes;
-              var u2_f = user2_info.rows[0].karmafrommemes;
-              var u1_w = user1_info.rows[0].motw;
-              var u2_w = user2_info.rows[0].motw;
-              var u1_t = user1_info.rows[0].motd;
-              var u2_t = user2_info.rows[0].motd;
-              var u1_a = u1_m>0 ? (Math.round(100 * (u1_f / u1_m - u1_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
-              var u2_a = u2_m>0 ? (Math.round(100 * (u2_f / u2_m - u2_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
-              var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
-              var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
-              var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
-              var w_comp = u1_w>u2_w?0:(u1_w<u2_w?1:2); // u1 / u2 / eq
-              var t_comp = u1_t>u2_t?0:(u1_t<u2_t?1:2); // u1 / u2 / eq
-              var embed = new Discord.RichEmbed()
-                .setColor(0xFFFF00)
-                .setTitle('It\'s flexing time 😎')
-                .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'__'+u1_k+'__':u1_k) + ' karma', true)
-                .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'__'+u2_k+'__':u2_k) + ' karma', true)
-                .addBlankField(true)
-                .addField((d_comp!=1?'__'+u1_d+'__':u1_d) + ' downvotes', (a_comp!=1?'__'+u1_a+'__':u1_a) + ' adj. avg. kpm', true)
-                .addField((d_comp>0?'__'+u2_d+'__':u2_d) + ' downvotes', (a_comp>0?'__'+u2_a+'__':u2_a) + ' adj. avg. kpm', true)
-                .addBlankField(true)
-                .addField(u1_m + ' memes', u1_f + ' kfm', true)
-                .addField(u2_m + ' memes', u2_f + ' kfm', true)
-                .addBlankField(true)
-                .addField((w_comp!=1?'__'+u1_w+'__':u1_w) + 'x motw', (t_comp!=1?'__'+u1_t+'__':u1_t) + 'x motd', true)
-                .addField((w_comp>0?'__'+u2_w+'__':u2_w) + 'x motw', (t_comp>0?'__'+u2_t+'__':u2_t) + 'x motd', true)
-                .addBlankField(true)
-                .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
-              message.channel.send(embed);
-            }
+  if (user1 != null && user2 != null) {
+    initUser(user1).then(init1_res => {
+      initUser(user2).then(init2_res => {
+          getInfo(user1).then((user1_info) => {
+            getInfo(user2).then((user2_info) => {
+              if (user1_info != null && user2_info != null) {
+                var u1_k = user1_info.rows[0].karma;
+                var u2_k = user2_info.rows[0].karma;
+                var u1_d = user1_info.rows[0].downvotes;
+                var u2_d = user2_info.rows[0].downvotes;
+                var u1_m = user1_info.rows[0].memes;
+                var u2_m = user2_info.rows[0].memes;
+                var u1_f = user1_info.rows[0].karmafrommemes;
+                var u2_f = user2_info.rows[0].karmafrommemes;
+                var u1_w = user1_info.rows[0].motw;
+                var u2_w = user2_info.rows[0].motw;
+                var u1_t = user1_info.rows[0].motd;
+                var u2_t = user2_info.rows[0].motd;
+                var u1_a = u1_m>0 ? (Math.round(100 * (u1_f / u1_m - u1_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
+                var u2_a = u2_m>0 ? (Math.round(100 * (u2_f / u2_m - u2_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
+                var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
+                var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
+                var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
+                var w_comp = u1_w>u2_w?0:(u1_w<u2_w?1:2); // u1 / u2 / eq
+                var t_comp = u1_t>u2_t?0:(u1_t<u2_t?1:2); // u1 / u2 / eq
+                var embed = new Discord.RichEmbed()
+                  .setColor(0xFFFF00)
+                  .setTitle('It\'s flexing time 😎')
+                  .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'__'+u1_k+'__':u1_k) + ' karma', true)
+                  .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'__'+u2_k+'__':u2_k) + ' karma', true)
+                  .addBlankField(true)
+                  .addField((d_comp!=1?'__'+u1_d+'__':u1_d) + ' downvotes', (a_comp!=1?'__'+u1_a+'__':u1_a) + ' adj. avg. kpm', true)
+                  .addField((d_comp>0?'__'+u2_d+'__':u2_d) + ' downvotes', (a_comp>0?'__'+u2_a+'__':u2_a) + ' adj. avg. kpm', true)
+                  .addBlankField(true)
+                  .addField(u1_m + ' memes', u1_f + ' kfm', true)
+                  .addField(u2_m + ' memes', u2_f + ' kfm', true)
+                  .addBlankField(true)
+                  .addField((w_comp!=1?'__'+u1_w+'__':u1_w) + 'x motw', (t_comp!=1?'__'+u1_t+'__':u1_t) + 'x motd', true)
+                  .addField((w_comp>0?'__'+u2_w+'__':u2_w) + 'x motw', (t_comp>0?'__'+u2_t+'__':u2_t) + 'x motd', true)
+                  .addBlankField(true)
+                  .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
+                message.channel.send(embed);
+              }
+            });
           });
-        });
-      } else {
-        message.channel.send('_Couldn\'t find one or both of the specified users._'); 
-      }
+      });
     });
-  });
+  } else {
+    message.channel.send('_Couldn\'t find one or both of the specified users._'); 
+  }
 }
 
 function cmd_sql(message) {
