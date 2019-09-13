@@ -110,11 +110,11 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
   // fromMeme = undefined => call didnt come from a meme
   // fromMeme = 1 => reciever gets +1 kfm ( author )
   // fromMeme = 2 => sender gets -1 kfm ( author )
-  if (sender == reciever) return -1;
-  if (amount <= 0) return -1;
-  return getInfo(sender).then((info) => {
+  if (sender == reciever) return;
+  if (amount <= 0) return;
+  getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) {
-      return -1;
+      return;
     } else {
       pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
       update karma set karma=karma-'+amount+' where uid='+sender.id+';\
@@ -122,7 +122,6 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
       .then(res => {
         updateLeaderboard();
         updateTransactions(sender, reciever, amount, fromMeme);
-        return 1;
       });
     }
   });
@@ -244,10 +243,7 @@ function cmd_sendkarma(message) {
     return;
   } else {
     var amount = parseInt(args[2]);
-    if (sendKarma(message.author, reciever_userObj, amount) > 0)
-      message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
-    else
-      message.channel.send('_Error completing request._');
+    message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
   }
 }
 
