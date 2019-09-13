@@ -256,6 +256,7 @@ function cmd_sendkarma(message) {
         return;
       } else {
         var amount = parseInt(args[2]);
+        sendKarma(message.author, reciever_userObj, amount);
         message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
       }
     });
