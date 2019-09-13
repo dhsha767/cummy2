@@ -263,9 +263,6 @@ function cmd_compare(message) {
           var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
           var w_comp = u1_w>u2_w?0:(u1_w<u2_w?1:2); // u1 / u2 / eq
           var t_comp = u1_t>u2_t?0:(u1_t<u2_t?1:2); // u1 / u2 / eq
-          var u1_s = (k_comp!=1?1:0) + (d_comp!=1?1:0) + (a_comp!=1?1:0) + (w_comp!=1?1:0) + (t_comp!=1?1:0);
-          var u2_s = (k_comp>0?1:0) + (d_comp>0?1:0) + (a_comp>0?1:0) + (w_comp>0?1:0) + (t_comp>0?1:0);
-          var w = u1_s>u2_s?user1:(u1_s<u2_s?user2:null);
           var embed = new Discord.RichEmbed()
             .setColor(0xFFFF00)
             .setTitle('It\'s flexing time 😎')
@@ -281,7 +278,6 @@ function cmd_compare(message) {
             .addField((w_comp!=1?'('+u1_w+')':u1_w) + 'x motw', (t_comp!=1?'('+u1_t+')':u1_t) + 'x motd', true)
             .addField((w_comp>0?'('+u2_w+')':u2_w) + 'x motw', (t_comp>0?'('+u2_t+')':u2_t) + 'x motd', true)
             .addBlankField(true)
-            .addField('-', 'Overal score is __' + u1_s + '-'+ u2_s + '__ in favor of __' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '__')
             .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
           message.channel.send(embed);
         }
