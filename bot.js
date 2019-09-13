@@ -46,7 +46,7 @@ const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
 const MOTWD_CHANNEL_ID = '621975142859276290';
-const MOTWD_RESET_TIME = [5, 10, 16]; // day, hours, minutes [0-sunday -> 6-saturday]
+const MOTWD_RESET_TIME = [5, 10, 20]; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -80,7 +80,7 @@ function issueMemeOfThe(p) {
     if (res.rows.length == 0) return;
     var m = res.rows[0];
     var l = 'https://discordapp.com/channels/'+GUILD_ID+'/'+m.channelid+'/'+m.messageid;
-    client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** ['+m.upvotes+' upvotes] goes to <@'+m.author+'>, congratulations!\n_<' + l + '>_\n_Total memes posted this ' + p + ': ' + res.rows.length + '_');
+    client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** ['+m.upvotes+' upvotes] goes to <@'+m.author+'>, congratulations!\n_<' + l + '>_\n_Total memes posted this ' + p + ': ' + res.rows.length + '_\n--- ---');
     var c = p=='Day'?'motd':'motw';
     pgClient.query('update karma set '+c+'='+c+'+1 where uid='+m.author+';');
   });
@@ -205,7 +205,7 @@ function cmd_karma(message) {
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     getInfo(target).then((info) => {
-      var kpm = info.rows[0].memes>0 ? (Math.round(info.rows[0].karmafrommemes / info.rows[0].memes - info.rows[0] * 100)/100) : 0;
+      var kpm = info.rows[0].memes>0 ? (Math.round(info.rows[0].karmafrommemes / info.rows[0].memes - info.rows[0].downvotes/AAKPM_DOWNVOTE_COEFF * 100)/100) : 0;
       var lm = Math.round((new Date().getTime() - info.rows[0].lastmeme)/1000/60/60 * 100)/100; // hours
       var embed = new Discord.RichEmbed()
         .setColor(0xFFFF00)
