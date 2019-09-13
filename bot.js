@@ -79,6 +79,7 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function initUser(user) {
+  console.log('init user ' + user.id);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     return new Promise((resolve, reject) => { resolve(0); });
   } else {
