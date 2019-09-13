@@ -130,11 +130,6 @@ function updateLeaderboard() {
       }
       embed.addField(v, f, false); 
     }
-    res.rows.forEach(row => {
-      var u = getUserFromUid(row.uid);
-      embed.addField(i + '. ' + );
-      i += 1;
-    });
     leaderboard_msg.edit('Last updated @ ' + getTimeStamp(), embed);
   });
 }
