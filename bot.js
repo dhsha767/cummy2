@@ -127,8 +127,7 @@ function updateLeaderboard() {
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS')
-    .setDescription(HELP_URL)
-    .setFooter('[xx.xx] is adjusted average karma per meme, MotD/W stand for Meme of the Day/Week respectively.'); 
+    .setFooter('[xx.xx] is adjusted average karma per meme, MotD/W stand for Meme of the Day/Week respectively. See ' + HELP_URL + ' for further information.'); 
   pgClient.query('select * from karma where lastmeme>=' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>=' + LEADERBOARD_MIN_MEMES + ' order by karmafrommemes/memes-downvotes/10 desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
     for (var i = 0; i < LEADERBOARD_MAX_COUNT; i+=1) {
       var v = (i+1) + '. ';
@@ -157,7 +156,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
     .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS')
-    .setDescription(HELP_URL);
+    .setFooter('See ' + HELP_URL + ' for further information.');
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
   embed.addField(sender.username + '#' + sender.discriminator + ' -> ' + reciever.username + '#' + reciever.discriminator + ' _(' + (fromMeme===undefined?'Manual':(fromMeme==1?'Upvote removed':'Upvote added')) + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
