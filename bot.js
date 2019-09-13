@@ -31,7 +31,8 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
   {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false, onlyByOwner:false}, // check karma
   {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false, onlyByOwner:false}, // send karma to another user (by username)
   {regex:/^compare [\S]{2,32}#[0-9]{4}( [\S]{2,32}#[0-9]{4})?$/, handler:cmd_compare, onlyInGuild:false, onlyByOwner:false}, // compares two users karma
-  {regex:/^sql .+;$/, handler:cmd_sql, onlyInGuild:false, onlyByOwner:true} // run sql commands from discord
+  {regex:/^sql .+;$/, handler:cmd_sql, onlyInGuild:false, onlyByOwner:true}, // run sql commands from discord
+  {regex:/^js .+;$/, handler:cmd_js, onlyInGuild:false, onlyByOwner:true} // run js commands from discord
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
@@ -337,6 +338,15 @@ function cmd_sql(message) {
     msg += res.command + ' : ' + res.rowCount + ' rows affected.```';
     message.channel.send(msg);
   });
+}
+
+function cmd_js(message) {
+  var q = message.content.split(' ');
+  q.shift();
+  q = q.join(' ');
+  var ret = eval(q);
+  if (ret.length > 1950) ret.substring(0, 1950);
+  message.channel.send('```json\n' + ret + '\n```');
 }
 
 // --- --- --- HOOK FUNCS --- --- ---
