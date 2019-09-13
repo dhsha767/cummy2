@@ -138,7 +138,7 @@ function updateLeaderboard() {
         var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
         var s = kpm - res.rows[i].downvotes/10;
         v += '__' + u.username + '#' + u.discriminator + '__ ['+ (Math.round(s * 100)/100) + ']';
-        if (res.rows[i].motw>0) v+= ' `' + res.rows[i].motw + 'x Motw`';
+        if (res.rows[i].motw>0) v+= ' `' + res.rows[i].motw + 'x MotW`';
         if (res.rows[i].motd>0) v+= ' `' + res.rows[i].motd + 'x MotD`';
         f = '**' + (Math.round(kpm * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
       } else {
@@ -189,7 +189,8 @@ function cmd_karma(message) {
         .addField(info.rows[0].karma + ' karma', info.rows[0].downvotes + ' downvotes')
         .addField(kpm + ' kpm', info.rows[0].memes + ' memes')
         .addField(info.rows[0].karmafrommemes + ' kfm', 'last meme: ' + lm + ' hrs ago')
-        .setFooter('kpm = karma per meme, kfm = karma from memes');
+        .addField(info.rows[0].motw + 'x MotW', info.rows[0].motd + 'x MotD')
+        .setFooter('kpm = karma per meme, kfm = karma from memes, motw/d = meme of the week/day');
       message.channel.send(embed);
     });
   }
@@ -224,13 +225,19 @@ function cmd_compare(message) {
           var u2_m = user2_info.rows[0].memes;
           var u1_f = user1_info.rows[0].karmafrommemes;
           var u2_f = user2_info.rows[0].karmafrommemes;
+          var u1_w = user1_info.rows[0].motw;
+          var u2_w = user2_info.rows[0].motw;
+          var u1_t = user1_info.rows[0].motd;
+          var u2_t = user2_info.rows[0].motd;
           var u1_a = u1_m>0 ? (Math.round(100 * u1_f / u1_m)/100) : 0;
           var u2_a = u2_m>0 ? (Math.round(100 * u2_f / u2_m)/100) : 0;
           var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
           var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
           var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
-          var u1_s = (k_comp!=1?1:0) + (d_comp!=1?1:0) + (a_comp!=1?1:0);
-          var u2_s = (k_comp>0?1:0) + (d_comp>0?1:0) + (a_comp>0?1:0);
+          var w_comp = u1_w>u2_w?0:(u1_w<u2_w?1:2); // u1 / u2 / eq
+          var t_comp = u1_t>u2_t?0:(u1_t<u2_t?1:2); // u1 / u2 / eq
+          var u1_s = (k_comp!=1?1:0) + (d_comp!=1?1:0) + (a_comp!=1?1:0) + (w_comp!=1?1:0) + (t_comp!=1?1:0);
+          var u2_s = (k_comp>0?1:0) + (d_comp>0?1:0) + (a_comp>0?1:0) + (w_comp>0?1:0) + (t_comp>0?1:0);
           var w = u1_s>u2_s?user1:(u1_s<u2_s?user2:null);
           var embed = new Discord.RichEmbed()
             .setColor(0xFFFF00)
@@ -242,6 +249,9 @@ function cmd_compare(message) {
             .addBlankField(true)
             .addField(u1_m + ' memes', u1_f + ' kfm', true)
             .addField(u2_m + ' memes', u2_f + ' kfm', true)
+            .addBlankField(true)
+            .addField((w_comp!=1?'('+u1_w+')':u1_w) + 'x motw', (t_comp!=1?'('+u1_t+')':u1_t) + 'x motd', true)
+            .addField((w_comp>0?'('+u2_w+')':u2_w) + 'x motw', (t_comp>0?'('+u2_t+')':u2_t) + 'x motd', true)
             .addBlankField(true)
             .addField('Overal score is **' + u1_s + '-'+ u2_s + '** in favor of **' + (w!=null?w.username+'#'+w.discriminator:'nobody') + '**', '-')
             .setFooter('kpm = karma per meme, kfm = karma from memes');
