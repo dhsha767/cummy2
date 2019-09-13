@@ -118,7 +118,7 @@ function updateLeaderboard() {
     var i = 1;
     res.rows.forEach(row => {
       var u = getUserFromUid(row.uid);
-      embed.addField(i + '. ' + u.username + '#' + u.discriminator, '***' + row.karma + '*** _karma,_ ***' + row.downvotes + '*** _downvotes_');
+      embed.addField(i + '. ' + u.username + '#' + u.discriminator, '**' + row.karma + '** karma, **' + row.downvotes + '** downvotes');
       i += 1;
     });
     leaderboard_msg.edit('Last updated @ ' + getTimeStamp(), embed);
@@ -130,7 +130,8 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   var old_fields = transactions_msg.embeds[0].fields;
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
-    .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS');
+    .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS')
+    .setDescription(HELP_URL);
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
   embed.addField(sender.username + '#' + sender.discriminator + ' -> ' + reciever.username + '#' + reciever.discriminator + ' _(' + (fromMeme===undefined?'Manual':(fromMeme==1?'Upvote removed':'Upvote added')) + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
   old_fields.forEach(field => {
