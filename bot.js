@@ -93,6 +93,18 @@ function updateDownvotes(reciever, amount) {
   updateLeaderboard();
 }
 
+function addToMemeTable(message) {
+  pgClient.query('insert into memes (channelid, messageid) values ('+message.channel.id+','+message.id+');');
+}
+
+function updateMemeTable(message, value, add) {
+  pgClient.query('update memes set upvotes=upvotes'+(add?'+':'-')+value+' where messageid=' + message.id + ';');
+}
+
+function resetMemeTable() { // TO-DO add logic to call this function
+  pgClient.query('truncate table memes;');
+}
+
 function updateMemeCount(author) { // update #memes and lastmeme fields
   pgClient.query('update karma set memes=memes+1,lastmeme='+new Date().getTime()+'where uid='+author.id+';');
 }
@@ -286,6 +298,7 @@ function hk_message(message) {
       if (VOTE.isDefault) message.react(VOTE.id);
     });
     updateMemeCount(message.author);
+    addToMemeTable(message);
   }
 }
 
@@ -296,10 +309,12 @@ function hk_messageReaction(message, emoji, user, add) {
   
   VOTES.forEach((VOTE) => { // check if reaction is a vote
     if (VOTE.name == emoji.name) { // we have a match!
-      if (VOTE.value > 0) // upvote logic
+      if (VOTE.value > 0) { // upvote logic
         add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
-      else // downvote logic
+        updateMemeTable(message, VOTE.value, add);
+      } else { // downvote logic
         updateDownvotes(message.author, add?1:-1);
+      }
     }
   });
 }
