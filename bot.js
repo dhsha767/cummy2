@@ -128,7 +128,7 @@ function updateLeaderboard() {
     .setColor(0xFFFF00)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS')
     .setDescription(HELP_URL)
-    .setFooter('[xx.xx] is adjusted average karma per meme'); 
+    .setFooter('[xx.xx] is adjusted average karma per meme, MotD/W stand for Meme of the Day/Week respectively.'); 
   pgClient.query('select * from karma where lastmeme>=' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>=' + LEADERBOARD_MIN_MEMES + ' order by karmafrommemes/memes-downvotes/10 desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
     for (var i = 0; i < LEADERBOARD_MAX_COUNT; i+=1) {
       var v = (i+1) + '. ';
@@ -138,8 +138,8 @@ function updateLeaderboard() {
         var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
         var s = kpm - res.rows[i].downvotes/10;
         v += '__' + u.username + '#' + u.discriminator + '__ ['+ (Math.round(s * 100)/100) + ']';
-        if (res.rows[i].motw>0) v+= ' ' + res.rows[0].motw + '`x Motw`';
-        if (res.rows[i].motd>0) v+= ' ' + res.rows[0].motd + '`x MotD`';
+        if (res.rows[i].motw>0) v+= ' `' + res.rows[i].motw + 'x Motw`';
+        if (res.rows[i].motd>0) v+= ' `' + res.rows[i].motd + 'x MotD`';
         f = '**' + (Math.round(kpm * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
       } else {
         v += '-'; 
