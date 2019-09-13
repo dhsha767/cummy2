@@ -15,7 +15,7 @@ const http = require('http'); // http requests (for the heartbeat)
 
 const HELP_URL = "https://github.com/bmdyy/cummy2/blob/master/README.md";
 const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
-const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
+const KEEPALIVE_INTERVAL = 1 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'pornhub.com/gay'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
   {name:'👎', id:'👎', value:-1, isDefault:true},
@@ -45,7 +45,8 @@ const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
-const MOTWD_RESET_TIME = ['5', '9', '33']; // day, hours, minutes [0-sunday -> 6-saturday]
+const MOTWD_CHANNEL_ID = '621975142859276290';
+const MOTWD_RESET_TIME = ['5', '9', '51']; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 
 // --- --- --- INITS --- --- ---
@@ -64,15 +65,23 @@ setInterval(() => {
   if (d.getHours() == MOTWD_RESET_TIME[1] && (d.getMinutes() >= MOTWD_RESET_TIME[2] && d.getMinutes() <= MOTWD_RESET_TIME[2] + KEEPALIVE_INTERVAL/60/1000)) {
     if (d.getDay() == MOTWD_RESET_TIME[0]) {
       // issue MotW and truncate table 
-      console.log('motw award');
+      issueMemeOfThe('Week');
       resetMemeTable();
     }
     // issue MotD
-    console.log('motd award');
+    issueMemeOfThe('Day');
   }
 }, KEEPALIVE_INTERVAL); // make sure dyno doesn't fall asleep ALSO issue motw/d + clear memes table when its time
 
 // --- --- --- HELPER FUNCS --- --- ---
+
+function issueMemeOfThe(p) {
+  pgClient.query('select * from memes order by upvotes desc'+(p=='Day'?(' where posttime>'+(new Date().getTime() - 1000*60*60*24)):'')+';').then((res) => {
+    var m = res.rows[0];
+    var l = 'https://discordapp.com/channels/'+GUILD_ID+'/'+m.channelid+'/'+m.messageid;
+    client.channels.get(MOTWD_CHANNEL_ID).send('Meme of the '+p+' goes to @..., congratulations! (<' + l + '>)');
+  });
+}
 
 function getInfo(user) {
   return pgClient.query('select * from karma where uid='+user.id+';');
@@ -106,7 +115,7 @@ function updateDownvotes(reciever, amount) {
 }
 
 function addToMemeTable(message) {
-  pgClient.query('insert into memes (channelid, messageid) values ('+message.channel.id+','+message.id+');');
+  pgClient.query('insert into memes (channelid, messageid, author, posttime) values ('+message.channel.id+','+message.id+','+message.author.id+','+(new Date().getTime())+');');
 }
 
 function updateMemeTable(message, value, add) {
