@@ -92,7 +92,7 @@ function updateDownvotes(reciever, amount) {
 }
 
 function updateMemeCount(author) { // update #memes and lastmeme fields
-  pgClient.query('update karma set memes=memes+1 where uid='+author.id+',lastmeme='+new Date().getTime());
+  pgClient.query('update karma set memes=memes+1,lastmeme='+new Date().getTime()+'where uid='+author.id+';');
 }
 
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
