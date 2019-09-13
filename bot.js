@@ -155,12 +155,13 @@ function cmd_karma(message) {
   } else {
     getInfo(target).then((info) => {
       var kpm = info.rows[0].memes>0 ? info.rows[0].karmafrommemes / info.rows[0].memes : 0;
+      var lm = (new Date().getTime() - info.rows[0].lastmeme)/1000/60/60; // hours
       var embed = new Discord.RichEmbed()
         .setColor(0xFFFF00)
         .setTitle(target.username + '#' + target.discriminator)
         .addField(info.rows[0].karma + ' karma', info.rows[0].downvotes + ' downvotes')
         .addField(kpm + ' kpm', info.rows[0].memes + ' memes')
-        .addField(info.rows[0].karmafrommemes + ' kfm', '-')
+        .addField(info.rows[0].karmafrommemes + ' kfm', 'last meme: ' + lm + ' hrs ago')
         .setFooter('kpm = karma per meme, kfm = karma from memes');
       message.channel.send(embed);
     });
