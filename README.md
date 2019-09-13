@@ -36,6 +36,7 @@ _The day begins at 00:00 GMT Time, and weeks begin on Mondays at the same time._
 A log of the 10 most recent transactions is updated for all to see if they do desire. Cummy2 does not retain this information, it's mostly just to see where people are sending their karma currently.
 
 ## Commands
+_\<opt:...\> indicates an optional parameter, \<req:...\> indicates a required parameter_
 
 **!help**
 
@@ -63,8 +64,6 @@ Cummy2 returns an embed with information about both users side by side. If the s
 
 _usage:_ `!sql (req:<query>)` <br>
 Cummy2 runs the issued query on it's database and returns the result in chat. *Only bmdyy#0068 can use this command*, all other users trying will be ignored.
-
-###### _\<opt:...\> indicates an optional parameter, \<req:...\> indicates a required parameter_
 
 ## API
 
