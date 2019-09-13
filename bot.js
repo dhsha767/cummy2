@@ -328,8 +328,8 @@ function cmd_sql(message) {
     if (res.command == 'SELECT') {
       res.rows.forEach(row => {
         var j = JSON.stringify(row);
-        if (j.length > 1980) // discord only allows 2000 chars max
-          j = j.substring(0, 1980) + '...';
+        if (j.length > 1950) // discord only allows 2000 chars max
+          j = j.substring(0, 1950) + '...';
         msg += j + '\n';
       }); 
     }
