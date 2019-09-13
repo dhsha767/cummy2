@@ -329,6 +329,7 @@ function cmd_sql(message) {
     if (res.command == 'SELECT') {
       res.rows.forEach(row => {
         var j = JSON.stringify(row);
+        console.log(j.length + ' : ' + j);
         if (j.length > 1900) // discord only allows 2000 chars max
           j = j.substring(0, 1900) + '...';
         msg += j + '\n';
