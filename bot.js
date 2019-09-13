@@ -328,7 +328,7 @@ function cmd_sql(message) {
       res.rows.forEach(row => {
         var j = JSON.stringify(row);
         if (j.length > 1990)
-          j = j.subtring(0, 1990) + '...';
+          j = j.substring(0, 1990) + '...';
         msg += j + '\n';
       }); 
     }
