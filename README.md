@@ -74,6 +74,11 @@ Cummy2 returns an embed with information about both users side by side. If the s
 _usage:_ `!sql (req:<query>)` <br>
 Cummy2 runs the issued query on it's database and returns the result in chat. *Only bmdyy#0068 can use this command*, all other users trying will be ignored.
 
+**!js**
+
+_usage:_ `!js (req:<statement>)` <br>
+Cummy2 runs the issued statement in javascript and returns the result in chat. *Only bmdyy#0068 can use this command*, all other users trying will be ignored.
+
 ## API
 
 Coming in the future (maybe), is an API for people to write their own bots which work with the karma system with. Getting user info, transferring karma, etc.
