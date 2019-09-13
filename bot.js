@@ -235,7 +235,7 @@ function cmd_karma(message) {
     initUser(target).then(init_res => {
       getInfo(target).then((info) => {
         var kpm = info.rows[0].memes>0 ? (Math.round(100 * info.rows[0].karmafrommemes / info.rows[0].memes - info.rows[0].downvotes/AAKPM_DOWNVOTE_COEFF )/100) : 0;
-        var lm = Math.round((new Date().getTime() - info.rows[0].lastmeme)/1000/60/60 * 100)/100; // hours
+        var lm = info.rows[0].lastmeme==0 ? 'n/a' : Math.round((new Date().getTime() - info.rows[0].lastmeme)/1000/60/60 * 100)/100; // hours
         var embed = new Discord.RichEmbed()
           .setColor(0xFFFF00)
           .setTitle(target.username + '#' + target.discriminator)
