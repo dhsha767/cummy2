@@ -82,7 +82,7 @@ function issueMemeOfThe(p) {
     } else {
       var m = res.rows[0];
       var l = 'https://discordapp.com/channels/'+GUILD_ID+'/'+m.channelid+'/'+m.messageid;
-      client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** ['+m.upvotes+' upvotes] goes to <@'+m.author+'>, congratulations!\n_<' + l + '>_\n_Total memes posted this ' + p + ': ' + res.rows.length + '_\n---');
+      client.channels.get(MOTWD_CHANNEL_ID).send('**Meme of the '+p+'** ['+m.upvotes+' upvotes] goes to <@'+m.author+'>, congratulations!\n_<' + l + '>_\n_Total memes posted this ' + p + ': ' + res.rows.length + '_ ['+getTimeStamp()+']\n---');
       var c = p=='Day'?'motd':'motw';
       pgClient.query('update karma set '+c+'='+c+'+1 where uid='+m.author+';');
     }
