@@ -79,6 +79,7 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function initUser(user) {
+  console.log('INIT USER ' + client.guilds.get(GUILD_ID).members.get(user.id).user.username);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     return new Promise((resolve, reject) => { resolve(0); });
   } else {
