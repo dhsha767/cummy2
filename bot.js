@@ -41,6 +41,7 @@ const LEADERBOARD_MESSAGE_ID = '621604987004518419';
 const LEADERBOARD_MAX_COUNT = 10;
 const LEADERBOARD_MAX_TIME_SINCE_LAST_MEME = 7 * 24 * 60 * 60 * 1000; // 7 days
 const LEADERBOARD_MIN_MEMES = 5;
+const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '621656560648847379';
 const TRANSACTIONS_MESSAGE_ID = '621657793203666945';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
@@ -136,7 +137,7 @@ function updateLeaderboard() {
       if (i < res.rows.length) {
         var u = getUserFromUid(res.rows[i].uid);
         var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
-        var s = kpm - res.rows[i].downvotes/10;
+        var s = kpm - res.rows[i].downvotes/AAKPM_DOWNVOTE_COEFF;
         v += '__' + u.username + '#' + u.discriminator + '__ ['+ (Math.round(s * 100)/100) + ']';
         if (res.rows[i].motw>0) v+= ' `' + res.rows[i].motw + 'x MotW`';
         if (res.rows[i].motd>0) v+= ' `' + res.rows[i].motd + 'x MotD`';
@@ -181,7 +182,7 @@ function cmd_karma(message) {
     message.channel.send('_Couldn\'t find ' + args[1] + '._');
   } else {
     getInfo(target).then((info) => {
-      var kpm = info.rows[0].memes>0 ? (Math.round(info.rows[0].karmafrommemes / info.rows[0].memes * 100)/100) : 0;
+      var kpm = info.rows[0].memes>0 ? (Math.round(info.rows[0].karmafrommemes / info.rows[0].memes - info.rows[0] * 100)/100) : 0;
       var lm = Math.round((new Date().getTime() - info.rows[0].lastmeme)/1000/60/60 * 100)/100; // hours
       var embed = new Discord.RichEmbed()
         .setColor(0xFFFF00)
@@ -229,8 +230,8 @@ function cmd_compare(message) {
           var u2_w = user2_info.rows[0].motw;
           var u1_t = user1_info.rows[0].motd;
           var u2_t = user2_info.rows[0].motd;
-          var u1_a = u1_m>0 ? (Math.round(100 * u1_f / u1_m)/100) : 0;
-          var u2_a = u2_m>0 ? (Math.round(100 * u2_f / u2_m)/100) : 0;
+          var u1_a = u1_m>0 ? (Math.round(100 * (u1_f / u1_m - u1_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
+          var u2_a = u2_m>0 ? (Math.round(100 * (u2_f / u2_m - u2_d/AAKPM_DOWNVOTE_COEFF))/100) : 0;
           var k_comp = u1_k>u2_k?0:(u1_k<u2_k?1:2); // u1 / u2 / eq
           var d_comp = u1_d<u2_d?0:(u1_d>u2_d?1:2); // u1 / u2 / eq
           var a_comp = u1_a>u2_a?0:(u1_a<u2_a?1:2); // u1 / u2 / eq
@@ -245,8 +246,8 @@ function cmd_compare(message) {
             .addField(user1.username + '#' + user1.discriminator, (k_comp!=1?'('+u1_k+')':u1_k) + ' karma', true)
             .addField(user2.username + '#' + user2.discriminator, (k_comp>0?'('+u2_k+')':u2_k) + ' karma', true)
             .addBlankField(true)
-            .addField((d_comp!=1?'('+u1_d+')':u1_d) + ' downvotes', (a_comp!=1?'('+u1_a+')':u1_a) + ' avg. kpm', true)
-            .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', (a_comp>0?'('+u2_a+')':u2_a) + ' avg. kpm', true)
+            .addField((d_comp!=1?'('+u1_d+')':u1_d) + ' downvotes', (a_comp!=1?'('+u1_a+')':u1_a) + ' adj. avg. kpm', true)
+            .addField((d_comp>0?'('+u2_d+')':u2_d) + ' downvotes', (a_comp>0?'('+u2_a+')':u2_a) + ' adj. avg. kpm', true)
             .addBlankField(true)
             .addField(u1_m + ' memes', u1_f + ' kfm', true)
             .addField(u2_m + ' memes', u2_f + ' kfm', true)
