@@ -16,6 +16,10 @@ Probably the biggest changes since the old Cummy. Upvotes and downvotes are now 
 5. ?? counts as +50 upvotes.
 6. ?? counts as +100 upvotes.
 
+_Deleting a meme does NOT reverse any downvotes/upvotes_
+
+_All karma sent by reacting on a meme is reversible simply by unreacting_
+
 **Leaderboard ranking**
 
 Leaderboard position is not just based on karma. In my opinion, this was a flaw with the original Cummy which promoted spamming memes. Position is now determined by average karma per meme, number of memes posted, and how long ago the person last posted a meme. More concretely:
@@ -23,12 +27,16 @@ Leaderboard position is not just based on karma. In my opinion, this was a flaw 
 1. _Only people who posted in the last 7 days appear on the leaderboard._
 2. _Only people who have posted 5+ memes (total) appear on the leaderboard._
 3. _People who meet conditions 1. and 2. are then ordered by `A = a-(d/10)` (A = adjusted average karma per meme) where a is avg. kpm and d is downvotes._
+4. _Number of Meme of the Day / Meme of the Week awards does not influence position on the leaderboard._
 
 _Condition 1_ is to prevent people who posted memes a long time ago from remaining at the top of the leaderboard despite being innactive in recent times. _Condition 2_ is to get a sense of avg. kpm over multiple memes. _Condition 3_ is to promote posting higher quality memes. Spamming low quality memes which get 0 or 1 upvotes will negatively impact the avg. kpm.
 
 **Meme of the day/week**
 
 Cummy2 posts a channel link to the day's/week's most upvoted meme (disregarding downvotes), so that people who are less active can get a quick recap.
+
+At the end of each day/week, the author of the respective top meme recives a MotD or MotW award (Displays near name in leaderboard/karma/comparisons).
+
 _The day begins at 00:00 GMT Time, and weeks begin on Mondays at the same time._
 
 **Transaction log**
@@ -53,7 +61,8 @@ Cummy2 returns information on either the sender's, or the specified user's karma
 **!sendkarma**
 
 _usage:_ `!sendkarma (req:<username>#<discriminator>) <req:amount>` <br>
-Given that you posess the amount of karma to be sent, Cummy2 transfers the karma from you to the specified user.
+Given that you posess the amount of karma to be sent, Cummy2 transfers the karma from you to the specified user. 
+_This is an irreversible transaction of karma._
 
 **!compare**
 
