@@ -123,7 +123,7 @@ function updateLeaderboard() {
       if (i < res.rows.length) {
         var u = getUserFromUid(res.rows[i].uid);
         v += u.username + '#' + u.discriminator;
-        f = '**' + (Math.round(res.rows[0].karmafrommemes / res.rows[0].memes * 100)/100) + '** avg. kpm, **' + row.karma + '** karma, **' + row.downvotes + '** downvotes';
+        f = '**' + (Math.round(res.rows[i].karmafrommemes / res.rows[i].memes * 100)/100) + '** avg. kpm, **' + res.rows[i].karma + '** karma, **' + res.rows[i].downvotes + '** downvotes';
       } else {
         v += '-'; 
         f = '-';
