@@ -18,12 +18,12 @@ const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'pornhub.com/gay'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
-  {name:'👎', id:'👎', value:-1, isDefault:true},
-  {name:'👍', id:'👍', value:1, isDefault:true},
-  {name:'🔥', id:'🔥', value:10, isDefault:false},
-  {name:'😳', id:'😳', value:25, isDefault:false},
-  {name:'🙈', id:'🙈', value:50, isDefault:false},
-  {name:'💍', id:'💍', value:100, isDefault:false}
+  {name:'downvote', id:'622710938432176138', value:-1, isDefault:true},
+  {name:'upvote_1', id:'622710938587627523', value:1, isDefault:true},
+  {name:'upvote_10', id:'622710938990018561', value:10, isDefault:false},
+  {name:'upvote_25', id:'622710938952400897', value:25, isDefault:false},
+  {name:'upvote_50', id:'622710941032775700', value:50, isDefault:false},
+  {name:'upvote_100', id:'622711379375292426', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?, only owner can issue command}
