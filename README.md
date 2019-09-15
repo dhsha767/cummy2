@@ -9,12 +9,12 @@ _William Moody 10.09.2019_ <br>
 
 Probably the biggest changes since the old Cummy. Upvotes and downvotes are now stored as seperate counters. Upvoting is no longer free, in that upvoting a meme sends karma from you to the person who posted. Downvotes are only used to calculate position in the leaderboard, and they are reset alongside MotW (every week on Monday @ 00:00 GMT Time). The 6 ways to vote on a meme are as follows:
 
-1. 👎 counts as a downvote.
-2. 👍 counts as +1 upvotes.
-3. 🔥 counts as +10 upvotes.
-4. 😳 counts as +25 upvotes.
-5. 🙈 counts as +50 upvotes.
-6. 💍 counts as +100 upvotes.
+1. ![downvote.png](https://i.imgur.com/Z7iqkc3.png) counts as a downvote.
+2. ![upvote_1.png](https://i.imgur.com/BkOxSG1.png) counts as +1 upvotes.
+3. ![upvote_10.png](https://i.imgur.com/IvHxEaJ.png) counts as +10 upvotes.
+4. ![upvote_25.png](https://i.imgur.com/G5dX1cD.png) counts as +25 upvotes.
+5. ![upvote_50.png](https://i.imgur.com/4C3kecD.png) counts as +50 upvotes.
+6. ![upvote_100.png](https://i.imgur.com/zYcoMMR.png) counts as +100 upvotes.
 
 _Deleting a meme does NOT reverse any downvotes/upvotes_
 
