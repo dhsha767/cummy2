@@ -34,6 +34,25 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
   {regex:/^sql .+;$/, handler:cmd_sql, onlyInGuild:false, onlyByOwner:true}, // run sql commands from discord
   {regex:/^js .+;$/, handler:cmd_js, onlyInGuild:false, onlyByOwner:true} // run js commands from discord
 ];
+const ROLES = [ // {id, lowBound, highBound}
+  {id:'623020086239821844', lowBound:0, upBound:99},
+  {id:'623020540252389396', lowBound:100, upBound:199},
+  {id:'623020618887069718', lowBound:200, upBound:299},
+  {id:'623020685412925440', lowBound:300, upBound:399},
+  {id:'623020746196647937', lowBound:400, upBound:499},
+  {id:'623020816023552011', lowBound:500, upBound:599},
+  {id:'623020864329482251', lowBound:600, upBound:699},
+  {id:'623020946676252672', lowBound:700, upBound:799},
+  {id:'623021008822992896', lowBound:800, upBound:899},
+  {id:'623021063931953154', lowBound:900, upBound:999},
+  {id:'623021112128700496', lowBound:1000, upBound:1099},
+  {id:'623021178914865162', lowBound:1100, upBound:1199},
+  {id:'623021276830760977', lowBound:1200, upBound:1299},
+  {id:'623021315410100225', lowBound:1300, upBound:1399},
+  {id:'623021366756769793', lowBound:1400, upBound:1499},
+  {id:'623021405302423602', lowBound:1500, upBound:9999999},
+  
+];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '621071935329140778';
@@ -80,12 +99,25 @@ setInterval(() => {
 // --- --- --- HELPER FUNCS --- --- ---
 
 function initUser(user) {
+  updateRole(user);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     return new Promise((resolve, reject) => { resolve(0); });
   } else {
     INITIALIZED_USERS.push(user.id);
     return pgClient.query('insert into karma (uid, karma) values (' + user.id + ',' + STARTING_KARMA + ') on conflict do nothing;');
   }
+}
+
+function updateRole(user) {
+  getInfo(user).then(info => {
+    ROLES.forEach(role => {
+      if (info.rows[0].karma >= role.lowBound && info.rows[0].karma <= role.upBound) {
+        user.addRole(role.id);
+      } else {
+        user.removeRole(role.id); 
+      }
+    });
+  });
 }
 
 function resetDownvotes() {
