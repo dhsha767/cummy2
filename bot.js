@@ -98,6 +98,12 @@ setInterval(() => {
 
 // --- --- --- HELPER FUNCS --- --- ---
 
+function initAll() { // for testing. call with !js initAll();
+  client.guilds.get(GUILD_ID).members.forEach(member => {
+    initUser(member.user);
+  });
+}
+
 function initUser(user) {
   updateRole(user);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
