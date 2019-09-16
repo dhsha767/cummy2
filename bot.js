@@ -105,7 +105,7 @@ function initAll() { // for testing. call with !js initAll();
 }
 
 function initUser(user) {
-  updateRole(user);
+  updateRole(client.guilds.get(GUILD_ID).members.get(user.id));
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     return new Promise((resolve, reject) => { resolve(0); });
   } else {
@@ -114,13 +114,13 @@ function initUser(user) {
   }
 }
 
-function updateRole(user) {
-  getInfo(user).then(info => {
+function updateRole(guildmember) {
+  getInfo(guildmember).then(info => {
     ROLES.forEach(role => {
       if (info.rows[0].karma >= role.lowBound && info.rows[0].karma <= role.upBound) {
-        user.addRole(role.id);
+        guildmember.addRole(role.id);
       } else {
-        user.removeRole(role.id); 
+        guildmember.removeRole(role.id); 
       }
     });
   });
