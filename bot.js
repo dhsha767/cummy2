@@ -98,7 +98,7 @@ function initAll() { // for testing. call with !js initAll();
 }
 
 function initUser(user) {
-  if (user.bot) return; // ignore bots for now
+  if (user.bot) return new Promise((resolve, reject) => { resolve(0); }); // ignore bots for now
   console.log('a : ' + user.username);
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     console.log('a2_1');
