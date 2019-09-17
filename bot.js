@@ -39,7 +39,7 @@ const ROLES = [ // {id, lowBound, highBound}
   {id:'623466582190063617', lowBound:250, upBound:499},
   {id:'623466634866327572', lowBound:500, upBound:749},
   {id:'623466690260500491', lowBound:750, upBound:999},
-  {id:'', lowBound:1000, upBound:1249}, // 623466734686437386
+  {id:'623466734686437386', lowBound:1000, upBound:1249},
   {id:'623466783575244801', lowBound:1250, upBound:1499},
   {id:'623466838982131713', lowBound:1500, upBound:1749},
   {id:'623466891058348042', lowBound:1750, upBound:1999},
@@ -49,7 +49,7 @@ const ROLES = [ // {id, lowBound, highBound}
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '532907700326105108';
-const LEADERBOARD_CHANNEL_ID = '623465650798460948';
+const LEADERBOARD_CHANNEL_ID = '623466100637696001';
 const LEADERBOARD_MESSAGE_ID = '';
 const LEADERBOARD_MAX_COUNT = 10;
 const LEADERBOARD_MAX_TIME_SINCE_LAST_MEME = 7 * 24 * 60 * 60 * 1000; // 7 days
