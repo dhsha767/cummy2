@@ -98,7 +98,7 @@ function initAll() { // for testing. call with !js initAll();
 }
 
 function initUser(user) {
-  if (user.bot) return; // ignore for now
+  if (user.bot) new Promise((resolve, reject) => { resolve(0); }); // ignore for now
   updateRole(client.guilds.get(GUILD_ID).members.get(user.id));
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     return new Promise((resolve, reject) => { resolve(0); });
