@@ -16,14 +16,14 @@ const http = require('http'); // http requests (for the heartbeat)
 const HELP_URL = "https://github.com/bmdyy/cummy2/blob/master/README.md";
 const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
-const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'under construction.'}}; // type PresenceData
+const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'http://www.pornhub.com/gay'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
-  {name:'downvote', id:'', value:-1, isDefault:true},
-  {name:'upvote_1', id:'', value:1, isDefault:true},
-  {name:'upvote_10', id:'', value:10, isDefault:false},
-  {name:'upvote_25', id:'', value:25, isDefault:false},
-  {name:'upvote_50', id:'', value:50, isDefault:false},
-  {name:'upvote_100', id:'', value:100, isDefault:false}
+  {name:'downvote', id:'623549772426379296', value:-1, isDefault:true},
+  {name:'upvote_1', id:'623549773517029377', value:1, isDefault:true},
+  {name:'upvote_10', id:'623549774615805952', value:10, isDefault:false},
+  {name:'upvote_25', id:'623549773911293972', value:25, isDefault:false},
+  {name:'upvote_50', id:'623549775576432651', value:50, isDefault:false},
+  {name:'upvote_100', id:'623549774913863690', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?, only owner can issue command}
