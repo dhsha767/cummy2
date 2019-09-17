@@ -98,6 +98,7 @@ function initAll() { // for testing. call with !js initAll();
 }
 
 function initUser(user) {
+  console.log('a');
   if (INITIALIZED_USERS.indexOf(user.id)>=0) {
     updateRole(client.guilds.get(GUILD_ID).members.get(user.id));
     return new Promise((resolve, reject) => { resolve(0); }); // ignore for now
@@ -108,6 +109,7 @@ function initUser(user) {
 }
 
 function updateRole(guildmember) {
+  console.log('b');
   if (guildmember.user.bot) return;
   getInfo(guildmember).then(info => {
     ROLES.forEach(role => {
