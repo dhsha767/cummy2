@@ -108,7 +108,6 @@ function initUser(user) {
 }
 
 function updateRole(guildmember) {
-  if (guildmember.user.bot) return; // ignore bots for now
   getInfo(guildmember).then(info => {
     ROLES.forEach(role => {
       if (info.rows[0].karma >= role.lowBound && info.rows[0].karma <= role.upBound) {
