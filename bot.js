@@ -98,10 +98,10 @@ function initAll() { // for testing. call with !js initAll();
 }
 
 function initUser(user) {
-  if (user.bot || INITIALIZED_USERS.indexOf(user.id)>=0) {
+  if (INITIALIZED_USERS.indexOf(user.id)>=0) {
+    updateRole(client.guilds.get(GUILD_ID).members.get(user.id));
     return new Promise((resolve, reject) => { resolve(0); }); // ignore for now
   } else {
-    updateRole(client.guilds.get(GUILD_ID).members.get(user.id));
     INITIALIZED_USERS.push(user.id);
     return pgClient.query('insert into karma (uid, karma) values (' + user.id + ',' + STARTING_KARMA + ') on conflict do nothing;');
   }
