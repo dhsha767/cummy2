@@ -395,6 +395,7 @@ function hk_message(message) {
   initUser(message.author).then(init_res => {
     if (message.author.id == client.user.id) return; // ignore own messages
     if (message.system) return; // ignore messages sent by discord
+    if (message.channel.type == 'dm') return; // ignore dms
 
     if (message.content.startsWith(COMMAND_PREFIX)) { // we may be dealing with a command
       COMMANDS.forEach((COMMAND) => {
