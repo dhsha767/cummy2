@@ -54,7 +54,7 @@ const LEADERBOARD_MESSAGE_ID = '623471149044596743';
 const LEADERBOARD_MAX_COUNT = 10;
 const LEADERBOARD_MAX_TIME_SINCE_LAST_MEME = 7 * 24 * 60 * 60 * 1000; // 7 days
 const LEADERBOARD_MIN_MEMES = 5;
-const AAKPM_DOWNVOTE_COEFF = 10.0; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
+const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '623465681031135242';
 const TRANSACTIONS_MESSAGE_ID = '623471194326302731';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
@@ -211,7 +211,7 @@ function updateLeaderboard() {
     .setDescription(HELP_URL)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS')
     .setFooter('[xx.xx] is adjusted average karma per meme, MotD/W stand for Meme of the Day/Week respectively. Follow link to the README for more information.'); 
-  pgClient.query('select * from karma where lastmeme>=' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>=' + LEADERBOARD_MIN_MEMES + ' order by (karmafrommemes/cast(memes as float)-downvotes/'+AAKPM_DOWNVOTE_COEFF+') desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
+  pgClient.query('select * from karma where lastmeme>=' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>=' + LEADERBOARD_MIN_MEMES + ' order by (karmafrommemes/cast(memes as float)-downvotes/cast('+AAKPM_DOWNVOTE_COEFF+' as float)) desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
     for (var i = 0; i < LEADERBOARD_MAX_COUNT; i+=1) {
       var v = (i+1) + '. ';
       var f = '';
