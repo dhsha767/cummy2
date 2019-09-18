@@ -211,7 +211,7 @@ function updateLeaderboard() {
     .setDescription(HELP_URL)
     .setTitle('TOP ' + LEADERBOARD_MAX_COUNT + ' DANK-MEMERS')
     .setFooter('[xx.xx] is adjusted average karma per meme, MotD/W stand for Meme of the Day/Week respectively. Follow link to the README for more information.'); 
-  pgClient.query('select * from karma where lastmeme>=' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>=' + LEADERBOARD_MIN_MEMES + ' order by (karmafrommemes/memes-downvotes/'+AAKPM_DOWNVOTE_COEFF+') desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
+  pgClient.query('select * from karma where lastmeme>=' + (new Date().getTime() - LEADERBOARD_MAX_TIME_SINCE_LAST_MEME) + ' and memes>=' + LEADERBOARD_MIN_MEMES + ' order by (karmafrommemes/cast(memes as float)-downvotes/'+AAKPM_DOWNVOTE_COEFF+') desc limit '+LEADERBOARD_MAX_COUNT+';').then(res => {
     for (var i = 0; i < LEADERBOARD_MAX_COUNT; i+=1) {
       var v = (i+1) + '. ';
       var f = '';
