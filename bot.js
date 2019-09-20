@@ -445,7 +445,7 @@ function hk_messageReaction(message, emoji, user, add) {
                 updateMemeCount(message.author, 1)
             }
             console.log(emoji);
-            add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1));
+            add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
             updateMemeTable(message, VOTE.value, add);
           } else { // downvote logic
             updateDownvotes(message.author, add?1:-1);
