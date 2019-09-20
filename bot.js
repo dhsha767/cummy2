@@ -148,7 +148,7 @@ function getTimeStamp() {
   return new Date().toUTCString();
 }
 
-function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update karmafrommemes as well
+function sendKarma(sender, reciever, amount, fromMeme, message, emoji) { // if fromMeme, update karmafrommemes as well
   // fromMeme = undefined => call didnt come from a meme
   // fromMeme = 1 => reciever gets +1 kfm ( author )
   // fromMeme = 2 => sender gets -1 kfm ( author )
@@ -156,7 +156,10 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
   if (amount <= 0) return;
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) {
-      // ILLEGAL REACTION
+      // ILLEGAL REACTION (if this is an add)
+      // remove reaction
+      if (message !== undefined && emoji !== undefined)
+        message.reactions.get(emoji.id).remove(sender.id);
       return;
     } else {
       pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
@@ -444,8 +447,7 @@ function hk_messageReaction(message, emoji, user, add) {
               else if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
                 updateMemeCount(message.author, 1)
             }
-            console.log(emoji);
-            add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
+            add ? sendKarma(user, message.author, VOTE.value, 2, message, emoji) : sendKarma(message.author, user, VOTE.value, 1);
             updateMemeTable(message, VOTE.value, add);
           } else { // downvote logic
             updateDownvotes(message.author, add?1:-1);
