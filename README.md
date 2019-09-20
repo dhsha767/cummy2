@@ -69,6 +69,11 @@ _This is an irreversible transaction of karma._
 _usage:_ `!compare (req:<username>#<discriminator>) (opt:<username>#<discriminator>)` <br>
 Cummy2 returns an embed with information about both users side by side. If the second username isn't specified then the user is compared to the sender.
 
+**!nm**
+
+_usage:_ `!nm ...` <br>
+Cummy2 will not count the following message as a meme and/or react to it.
+
 **!sql**
 
 _usage:_ `!sql (req:<query>)` <br>
