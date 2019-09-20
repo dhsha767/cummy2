@@ -401,7 +401,7 @@ function hk_message(message) {
     if (message.author.id == client.user.id) return; // ignore own messages
     if (message.system) return; // ignore messages sent by discord
     if (message.channel.type == 'dm') return; // ignore dms
-    if (message.content.startsWith(COMMAND_NOT_MEME)) { console.log ('not meme'); return; } // ignore not meme
+    if (message.content.startsWith(COMMAND_NOT_MEME)) return; // ignore not meme
     
     if (message.content.startsWith(COMMAND_PREFIX)) { // we may be dealing with a command
       COMMANDS.forEach((COMMAND) => {
@@ -430,7 +430,7 @@ function hk_messageReaction(message, emoji, user, add) {
       if (user.id == client.user.id) return; // ignore reactions from cummy
       if (user.id == message.author.id) return; // ignore reactions from message author
       if (message.channel.type == 'dm') return; // ignore reactions in dms
-      if (message.content.startsWith(COMMAND_NOT_MEME)) { console.log ('not meme'); return; } // ignore not meme
+      if (message.content.startsWith(COMMAND_NOT_MEME)) return; // ignore not meme
 
       VOTES.forEach((VOTE) => { // check if reaction is a vote
         if (VOTE.name == emoji.name) { // we have a match!
