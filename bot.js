@@ -429,14 +429,16 @@ function hk_messageReaction(message, emoji, user, add) {
       if (user.id == message.author.id) return; // ignore reactions from message author
       if (message.channel.type == 'dm') return; // ignore reactions in dms
 
-      var it = message.reactions.values();
-      console.log(it.next().count);
-      console.log(it.hasNext());
+      if (!isMeme(message)) {// we didnt count as meme before
+              var iter = message.reactions.values();
+              if (iter.next().value.count == 1 && it.next().value === undefined) // first reaction
+                console.log("UPDATE MEME COUNT"); //updateMemeCount(message.author);
+            }
       
       VOTES.forEach((VOTE) => { // check if reaction is a vote
         if (VOTE.name == emoji.name) { // we have a match!
           if (VOTE.value > 0) { // upvote logic
-            //if (!isMeme(message)) // we didnt count as meme before
+            
             add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
             updateMemeTable(message, VOTE.value, add);
           } else { // downvote logic
