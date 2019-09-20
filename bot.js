@@ -187,8 +187,8 @@ function resetMemeTable() {
   pgClient.query('truncate table memes;');
 }
 
-function updateMemeCount(author) { // update #memes and lastmeme fields
-  pgClient.query('update karma set memes=memes+1,lastmeme='+new Date().getTime()+'where uid='+author.id+';');
+function updateMemeCount(author, val) { // update #memes and lastmeme fields
+  pgClient.query('update karma set memes=memes+'+val+',lastmeme='+new Date().getTime()+'where uid='+author.id+';');
 }
 
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
@@ -416,7 +416,7 @@ function hk_message(message) {
       VOTES.forEach((VOTE) => { // react with default votes
         if (VOTE.isDefault) message.react(VOTE.id);
       });
-      updateMemeCount(message.author);
+      updateMemeCount(message.author, 1);
       addToMemeTable(message);
     }
   });
@@ -434,8 +434,11 @@ function hk_messageReaction(message, emoji, user, add) {
           if (VOTE.value > 0) { // upvote logic
             if (!isMeme(message)) {// we didnt count as meme before
               var iter = message.reactions.values();
-              if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
-                updateMemeCount(message.author)
+              var iter2 = message.reactions.values();
+              if (iter2.next().value === undefined) // no reactions left == not meme
+                updateMemeCount(message.author, -1);
+              else if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
+                updateMemeCount(message.author, 1)
             }
             add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
             updateMemeTable(message, VOTE.value, add);
