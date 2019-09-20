@@ -153,7 +153,7 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
   // fromMeme = 1 => reciever gets +1 kfm ( author )
   // fromMeme = 2 => sender gets -1 kfm ( author )
   if (sender == reciever) return;
-  if (amount <= 0) return;
+  if (amount <= 0) return -1; // ILLEGAL UPVOTE
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) {
       return;
@@ -443,7 +443,10 @@ function hk_messageReaction(message, emoji, user, add) {
               else if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
                 updateMemeCount(message.author, 1)
             }
-            add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
+            var ret = add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
+            if (add && ret == -1) { // illegal upvote
+              console.log("ILLEGAL UPVOTE"); 
+            }
             updateMemeTable(message, VOTE.value, add);
           } else { // downvote logic
             updateDownvotes(message.author, add?1:-1);
