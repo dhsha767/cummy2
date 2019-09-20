@@ -26,6 +26,7 @@ const VOTES = [ // {emoji name, value, reacted by default}
   {name:'upvote_100', id:'623549774913863690', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
+const COMMAND_NOT_MEME = COMMAND_PREFIX + "nm"; // ignore this message
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?, only owner can issue command}
   {regex:/^help$/, handler:cmd_help, onlyInGuild:false, onlyByOwner:false}, // help docs
   {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false, onlyByOwner:false}, // check karma
@@ -400,7 +401,8 @@ function hk_message(message) {
     if (message.author.id == client.user.id) return; // ignore own messages
     if (message.system) return; // ignore messages sent by discord
     if (message.channel.type == 'dm') return; // ignore dms
-
+    if (message.content.startsWith(COMMAND_NOT_MEME)) { console.log ('not meme'); return; } // ignore not meme
+    
     if (message.content.startsWith(COMMAND_PREFIX)) { // we may be dealing with a command
       COMMANDS.forEach((COMMAND) => {
         if (message.content.substring(COMMAND_PREFIX.length).match(COMMAND.regex) != null) { // we have a match
@@ -428,6 +430,7 @@ function hk_messageReaction(message, emoji, user, add) {
       if (user.id == client.user.id) return; // ignore reactions from cummy
       if (user.id == message.author.id) return; // ignore reactions from message author
       if (message.channel.type == 'dm') return; // ignore reactions in dms
+      if (message.content.startsWith(COMMAND_NOT_MEME)) { console.log ('not meme'); return; } // ignore not meme
 
       VOTES.forEach((VOTE) => { // check if reaction is a vote
         if (VOTE.name == emoji.name) { // we have a match!
