@@ -206,7 +206,6 @@ function getUserFromUid(uid) {
 }
 
 function updateLeaderboard() {
-  console.log('updateldearboard');
   var leaderboard_msg = client.channels.get(LEADERBOARD_CHANNEL_ID).messages.get(LEADERBOARD_MESSAGE_ID);
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
@@ -236,7 +235,6 @@ function updateLeaderboard() {
 }
 
 function updateTransactions(sender, reciever, amount, fromMeme) {
-  console.log('updatetrans');
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
   var old_fields = transactions_msg.embeds[0].fields;
   var embed = new Discord.RichEmbed()
