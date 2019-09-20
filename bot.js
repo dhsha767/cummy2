@@ -159,7 +159,7 @@ function sendKarma(sender, reciever, amount, fromMeme, message, emoji) { // if f
       // ILLEGAL REACTION (if this is an add)
       // remove reaction
       if (message !== undefined && emoji !== undefined)
-        message.reactions.get(emoji.id).remove(sender.id);
+        message.reactions.get(emoji.name +":" + emoji.id).remove(sender.id);
       return;
     } else {
       pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
