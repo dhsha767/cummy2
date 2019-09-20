@@ -174,7 +174,7 @@ function updateDownvotes(reciever, amount) {
 }
 
 function addToMemeTable(message) {
-  return pgClient.query('insert into memes (channelid, messageid, author, posttime) values ('+message.channel.id+','+message.id+','+message.author.id+','+(new Date().getTime())+') on conflict do nothing;');
+  return pgClient.query('insert into memes (channelid, messageid, author, posttime) values ('+message.channel.id+','+message.id+','+message.author.id+','+message.createdTimestamp+') on conflict do nothing;');
 }
 
 function updateMemeTable(message, value, add) {
