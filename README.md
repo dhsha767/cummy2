@@ -72,7 +72,7 @@ Cummy2 returns an embed with information about both users side by side. If the s
 **!nm**
 
 _usage:_ `!nm ...` <br>
-Cummy2 will not count the following message as a meme and/or react to it.
+Stands for _"Not Meme"_, Cummy2 will not count the following message as a meme and/or react to it.
 
 **!sql**
 
