@@ -429,7 +429,7 @@ function hk_messageReaction(message, emoji, user, add) {
       if (user.id == message.author.id) return; // ignore reactions from message author
       if (message.channel.type == 'dm') return; // ignore reactions in dms
 
-      console.log(message.reactions);
+      console.log(message.reactions.size() == 1 && message.reactions.values().next().count == 1);
       
       VOTES.forEach((VOTE) => { // check if reaction is a vote
         if (VOTE.name == emoji.name) { // we have a match!
