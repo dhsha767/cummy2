@@ -249,6 +249,10 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   transactions_msg.edit('Last updated @ ' + getTimeStamp(), embed);
 }
 
+function isMeme(message) {
+  return message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null;
+}
+
 // --- --- --- CMD FUNCS --- --- ---
 
 function cmd_help(message) {
@@ -407,7 +411,7 @@ function hk_message(message) {
       });
     }
 
-    if (message.embeds.length > 0 || message.attachments.size > 0 || message.content.match(URL_REGEX) != null) {
+    if (isMeme(message)) {
       // this classifies as a meme! (has embed OR has attachment OR has url)
       VOTES.forEach((VOTE) => { // react with default votes
         if (VOTE.isDefault) message.react(VOTE.id);
@@ -425,9 +429,12 @@ function hk_messageReaction(message, emoji, user, add) {
       if (user.id == message.author.id) return; // ignore reactions from message author
       if (message.channel.type == 'dm') return; // ignore reactions in dms
 
+      console.log(message.reactions);
+      
       VOTES.forEach((VOTE) => { // check if reaction is a vote
         if (VOTE.name == emoji.name) { // we have a match!
           if (VOTE.value > 0) { // upvote logic
+            //if (!isMeme(message)) // we didnt count as meme before
             add ? sendKarma(user, message.author, VOTE.value, 2) : sendKarma(message.author, user, VOTE.value, 1);
             updateMemeTable(message, VOTE.value, add);
           } else { // downvote logic
