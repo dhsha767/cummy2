@@ -429,7 +429,7 @@ function hk_messageReaction(message, emoji, user, add) {
       if (user.id == message.author.id) return; // ignore reactions from message author
       if (message.channel.type == 'dm') return; // ignore reactions in dms
 
-      if (!isMeme(message) && message.author.id=='621070772643037221') {// we didnt count as meme before
+      if (!isMeme(message)) {// we didnt count as meme before
         console.log('t');
               var iter = message.reactions.values();
               if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
