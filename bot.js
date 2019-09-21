@@ -250,7 +250,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
     embed.addField(field.name, field.value, field.inline);
   });
   
-  var old_json = json_msg.content.substring(7,json_msg.content.length-3); // ```json and ```
+  var old_json = json_msg.content; // ```json and ```
   old_json = JSON.parse(old_json);
   console.log(old_json);
   var new_json = old_json;
