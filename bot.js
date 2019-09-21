@@ -252,10 +252,9 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   
   var old_json = json_msg.content; // ```json and ```
   old_json = JSON.parse(old_json);
-  console.log(old_json);
-  var new_json = old_json;
-  
-  json_msg.edit(JSON.stringify(new_json));
+  while (old_json.transactions.length > TRANSACTIONS_MAX_COUNT - 1) { old_json.transactions.pop(); }
+  old_json.transactions.push(JSON.parse('{"sender":"4", "receiver":"4", "amount":"0"}'));
+  json_msg.edit(JSON.stringify(old_json));
   transactions_msg.edit('Last updated @ ' + getTimeStamp(), embed);
 }
 
