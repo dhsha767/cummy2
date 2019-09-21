@@ -156,7 +156,9 @@ function sendKarma(sender, reciever, amount, fromMeme, message, emoji) { // if f
   if (amount <= 0) return;
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) {
-      return;
+      if (message !== undefined && emoji !== undefined) { // illegal reaction
+        message.reactions.get(emoji.name + ":" + emoji.id).remove(sender.id); 
+      }
     } else {
       pgClient.query('update karma set karma=karma+'+amount+' where uid='+reciever.id+';\
       update karma set karma=karma-'+amount+' where uid='+sender.id+';\
@@ -443,7 +445,12 @@ function hk_messageReaction(message, emoji, user, add) {
               else if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
                 updateMemeCount(message.author, 1)
             }
-            add ? sendKarma(user, message.author, VOTE.value, 2, message, emoji) : sendKarma(message.author, user, VOTE.value, 1);
+            if (add) {
+              sendKarma(user, message.author, VOTE.value, 2, message, emoji)
+            }
+            else {
+              sendKarma(message.author, user, VOTE.value, 1); 
+            }
             updateMemeTable(message, VOTE.value, add);
           } else { // downvote logic
             updateDownvotes(message.author, add?1:-1);
