@@ -256,8 +256,9 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   old_json = JSON.parse(old_json);
   while (old_json.transactions.length > TRANSACTIONS_MAX_COUNT - 1) { old_json.transactions.shift(); }
   old_json.transactions.push(JSON.parse('{"sender":"'+sender.id+'", "receiver":"'+reciever.id+'", "amount":"'+amount+'", "timestamp":"'+new Date().getTime()+'"}'));
-  json_msg.edit(JSON.stringify(old_json));
-  transactions_msg.edit('Last updated @ ' + timestamp, embed);
+  json_msg.edit(JSON.stringify(old_json)).then(r => {
+    transactions_msg.edit('Last updated @ ' + timestamp, embed);
+  });
 }
 
 function isMeme(message) {
