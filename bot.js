@@ -58,6 +58,7 @@ const LEADERBOARD_MIN_MEMES = 5;
 const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '623465681031135242';
 const TRANSACTIONS_MESSAGE_ID = '623471194326302731';
+const TRANSACTIONS_MESSAGE_JSON_ID = '624991542498820136';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
 const MOTWD_CHANNEL_ID = '623465731857711125';
 const MOTWD_RESET_TIME = [1, 0, 0]; // day, hours, minutes [0-sunday -> 6-saturday]
@@ -236,6 +237,7 @@ function updateLeaderboard() {
 
 function updateTransactions(sender, reciever, amount, fromMeme) {
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
+  var json_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_JSON_ID);
   var old_fields = transactions_msg.embeds[0].fields;
   var embed = new Discord.RichEmbed()
     .setColor(0xFFFF00)
@@ -247,6 +249,13 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
+  
+  var old_json = json_msg.content.substring(7,json_msg.content.length-3); // ```json and ```
+  old_json = JSON.parse(old_json);
+  console.log(old_json);
+  var new_json = old_json;
+  
+  json_msg.edit(new_json);
   transactions_msg.edit('Last updated @ ' + getTimeStamp(), embed);
 }
 
