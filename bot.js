@@ -236,6 +236,8 @@ function updateLeaderboard() {
 }
 
 function updateTransactions(sender, reciever, amount, fromMeme) {
+  var timestamp = getTimeStamp();
+  
   var transactions_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_ID);
   var json_msg = client.channels.get(TRANSACTIONS_CHANNEL_ID).messages.get(TRANSACTIONS_MESSAGE_JSON_ID);
   var old_fields = transactions_msg.embeds[0].fields;
@@ -245,7 +247,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
     .setDescription(HELP_URL)
     .setFooter('See link to the README for further information.');
   while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
-  embed.addField(sender.username + '#' + sender.discriminator + ' -> ' + reciever.username + '#' + reciever.discriminator + ' _(' + (fromMeme===undefined?'Manual':(fromMeme==1?'Upvote removed':'Upvote added')) + ')_', '**' + amount + '** karma ['+getTimeStamp()+']');
+  embed.addField(sender.username + '#' + sender.discriminator + ' -> ' + reciever.username + '#' + reciever.discriminator + ' _(' + (fromMeme===undefined?'Manual':(fromMeme==1?'Upvote removed':'Upvote added')) + ')_', '**' + amount + '** karma ['+timestamp+']');
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
   });
@@ -253,9 +255,9 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   var old_json = json_msg.content; // ```json and ```
   old_json = JSON.parse(old_json);
   while (old_json.transactions.length > TRANSACTIONS_MAX_COUNT - 1) { old_json.transactions.pop(); }
-  old_json.transactions.push(JSON.parse('{"sender":"'+sender.id+'", "receiver":"'+reciever.id+'", "amount":"'+amount+'"}'));
+  old_json.transactions.push(JSON.parse('{"sender":"'+sender.id+'", "receiver":"'+reciever.id+'", "amount":"'+amount+'", "timestamp":"'+new Date().getTime()+'"}'));
   json_msg.edit(JSON.stringify(old_json));
-  transactions_msg.edit('Last updated @ ' + getTimeStamp(), embed);
+  transactions_msg.edit('Last updated @ ' + timestamp, embed);
 }
 
 function isMeme(message) {
