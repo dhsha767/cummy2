@@ -255,7 +255,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
   console.log(old_json);
   var new_json = old_json;
   
-  json_msg.edit(new_json);
+  json_msg.edit(JSON.stringify(new_json));
   transactions_msg.edit('Last updated @ ' + getTimeStamp(), embed);
 }
 
