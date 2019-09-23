@@ -151,7 +151,7 @@ function getTimeStamp() {
   return new Date().toUTCString();
 }
 
-function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update karmafrommemes as well
+function sendKarma(sender, reciever, amount, fromMeme, message) { // if fromMeme, update karmafrommemes as well
   // fromMeme = undefined => call didnt come from a meme
   // fromMeme = 1 => reciever gets +1 kfm ( author )
   // fromMeme = 2 => sender gets -1 kfm ( author )
@@ -167,8 +167,21 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
       .then(res => {
         updateLeaderboard();
         updateTransactions(sender, reciever, amount, fromMeme);
-        if (fromMeme!==undefined)
+        if (fromMeme!==undefined) {
           updateMemeTable(message, VOTE.value, (fromMeme==1));
+          if (message !== undefined) {
+            if (amount > 0) { // upvote logic
+              if (!isMeme(message)) {// we didnt count as meme before
+                var iter = message.reactions.values();
+                var iter2 = message.reactions.values();
+                if (iter2.next().value === undefined) // no reactions left == not meme
+                  updateMemeCount(message.author, -1);
+                else if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
+                  updateMemeCount(message.author, 1)
+              }
+            }
+          }
+        }
       });
     }
   });
@@ -454,17 +467,8 @@ function hk_messageReaction(message, emoji, user, add) {
 
       VOTES.forEach((VOTE) => { // check if reaction is a vote
         if (VOTE.name == emoji.name) { // we have a match!
-          if (VOTE.value > 0) { // upvote logic
-            if (!isMeme(message)) {// we didnt count as meme before
-              var iter = message.reactions.values();
-              var iter2 = message.reactions.values();
-              if (iter2.next().value === undefined) // no reactions left == not meme
-                updateMemeCount(message.author, -1);
-              else if (iter.next().value.count == 1 && iter.next().value === undefined) // first reaction
-                updateMemeCount(message.author, 1)
-            }
             if (add) {
-              sendKarma(user, message.author, VOTE.value, 2)
+              sendKarma(user, message.author, VOTE.value, 2, message)
             }
             //else {
             //  sendKarma(message.author, user, VOTE.value, 1); 
