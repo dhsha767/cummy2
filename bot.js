@@ -167,6 +167,8 @@ function sendKarma(sender, reciever, amount, fromMeme) { // if fromMeme, update 
       .then(res => {
         updateLeaderboard();
         updateTransactions(sender, reciever, amount, fromMeme);
+        if (fromMeme!==undefined)
+          updateMemeTable(message, VOTE.value, (fromMeme==1));
       });
     }
   });
@@ -467,7 +469,6 @@ function hk_messageReaction(message, emoji, user, add) {
             //else {
             //  sendKarma(message.author, user, VOTE.value, 1); 
             //}
-            updateMemeTable(message, VOTE.value, add);
           } else { // downvote logic
             updateDownvotes(message.author, add?1:-1);
           }
