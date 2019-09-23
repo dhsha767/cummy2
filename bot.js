@@ -67,6 +67,7 @@ const STARTING_KARMA = 1000; // how much to start everyone with
 var INITIALIZED_USERS = []; // keep track of users we know are registered, to avoid unecessary sql queries (until next restart of course)
 var BLACKLIST = ['607986239307644931']; // ignore these users
 var NON_MEME_CHANNELS = ['623469386723885056']; // these are non meme channels
+var NON_MEME_USERS = ['592338193983209472', '610912069054758935'];
 
 // --- --- --- INITS --- --- ---
 
@@ -430,7 +431,7 @@ function hk_message(message) {
     if (message.author.id == client.user.id) return; // ignore own messages
     if (message.system) return; // ignore messages sent by discord
     if (message.channel.type == 'dm') return; // ignore dms
-    if (message.content.startsWith(COMMAND_NOT_MEME)) return; // ignore not meme
+    if (message.content.startsWith(COMMAND_NOT_MEME) or NON_MEME_USERS.indexOf(message.author.id) != -1) return; // ignore not meme
     
     if (message.content.startsWith(COMMAND_PREFIX)) { // we may be dealing with a command
       COMMANDS.forEach((COMMAND) => {
