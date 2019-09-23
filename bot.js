@@ -157,6 +157,7 @@ function sendKarma(sender, reciever, amount, fromMeme, message) { // if fromMeme
   // fromMeme = 2 => sender gets -1 kfm ( author )
   if (sender == reciever) return;
   if (amount <= 0) return;
+  if (BLACKLIST.indexOf(sender.id) != -1 || BLACKLIST.indexOf(reciever.id) != -1) return;
   getInfo(sender).then((info) => {
     if (info.rows[0].karma < amount) {
       return; 
