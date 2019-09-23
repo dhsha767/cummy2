@@ -411,7 +411,6 @@ function hk_ready() {
 
 function hk_message(message) {
   if (BLACKLIST.indexOf(message.author.id) != -1) return; 
-  if (NON_MEME_CHANNELS.indexOf(message.channel.id) != -1) return;
   
   initUser(message.author).then(init_res => {
     if (message.author.id == client.user.id) return; // ignore own messages
@@ -430,6 +429,7 @@ function hk_message(message) {
     }
 
     if (isMeme(message)) {
+      if (NON_MEME_CHANNELS.indexOf(message.channel.id) != -1) return;
       // this classifies as a meme! (has embed OR has attachment OR has url)
       VOTES.forEach((VOTE) => { // react with default votes
         if (VOTE.isDefault) message.react(VOTE.id);
