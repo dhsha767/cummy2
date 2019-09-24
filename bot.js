@@ -315,7 +315,7 @@ function cmd_karma(message) {
 
 function cmd_sendkarma(message) {
   var args = message.content.split(' ');
-  var args_2 = parseInt(args[2]);
+  var args_2 = parseInt(args[args.length-1]);
   args.pop();
   args.shift();
   args = args.join(' ');
