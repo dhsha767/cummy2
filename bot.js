@@ -319,6 +319,7 @@ function cmd_sendkarma(message) {
   args.pop();
   args.shift();
   args = args.join(' ');
+  console.log("u = " + args + " / args 2 = " + args_2);
   var reciever_userObj = findUser(args);
   initUser(message.author).then(init1_res => {
     initUser(reciever_userObj).then(init2_res => {
