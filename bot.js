@@ -213,6 +213,7 @@ function updateMemeCount(author, val) { // update #memes and lastmeme fields
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
+  console.log(args);
   var userObj = client.guilds.get(GUILD_ID).members.find((val) => {
     return val['user'].username.toLowerCase() == args[0].toLowerCase() && val['user'].discriminator == args[1];
   });
