@@ -30,7 +30,7 @@ const COMMAND_NOT_MEME = COMMAND_PREFIX + "nm"; // ignore this message
 const COMMANDS = [ // {regex, handler function, only handle cmd inside server chat?, only owner can issue command}
   {regex:/^help$/, handler:cmd_help, onlyInGuild:false, onlyByOwner:false}, // help docs
   {regex:/^karma( [\S]+)?$/, handler:cmd_karma, onlyInGuild:false, onlyByOwner:false}, // check karma
-  {regex:/^sendkarma [\S]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false, onlyByOwner:false}, // send karma to another user (by username)
+  {regex:/^sendkarma [\S ]+ [1-9]+[0-9]*$/, handler:cmd_sendkarma, onlyInGuild:false, onlyByOwner:false}, // send karma to another user (by username)
   {regex:/^compare [\S]{2,32}#[0-9]{4}( [\S]{2,32}#[0-9]{4})?$/, handler:cmd_compare, onlyInGuild:false, onlyByOwner:false}, // compares two users karma
   {regex:/^sql .+;$/, handler:cmd_sql, onlyInGuild:false, onlyByOwner:true}, // run sql commands from discord
   {regex:/^js .+;$/, handler:cmd_js, onlyInGuild:false, onlyByOwner:true} // run js commands from discord
@@ -315,14 +315,18 @@ function cmd_karma(message) {
 
 function cmd_sendkarma(message) {
   var args = message.content.split(' ');
-  var reciever_userObj = findUser(args[1]);
+  var args_2 = args[2];
+  args.pop();
+  args.shift();
+  args = args.join(' ');
+  var reciever_userObj = findUser(args);
   initUser(message.author).then(init1_res => {
     initUser(reciever_userObj).then(init2_res => {
       if (reciever_userObj == null) { // didnt find
-        message.channel.send('_Couldn\'t find ' + args[1] + '._');
+        message.channel.send('_Couldn\'t find ' + args + '._');
         return;
       } else {
-        var amount = parseInt(args[2]);
+        var amount = parseInt(args_2);
         sendKarma(message.author, reciever_userObj, amount);
         message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
       }
