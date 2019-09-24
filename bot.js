@@ -315,7 +315,7 @@ function cmd_karma(message) {
 
 function cmd_sendkarma(message) {
   var args = message.content.split(' ');
-  var args_2 = args[2];
+  var args_2 = parseInt(args[2]);
   args.pop();
   args.shift();
   args = args.join(' ');
@@ -326,7 +326,7 @@ function cmd_sendkarma(message) {
         message.channel.send('_Couldn\'t find ' + args + '._');
         return;
       } else {
-        var amount = parseInt(args_2);
+        var amount = args_2;
         sendKarma(message.author, reciever_userObj, amount);
         message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
       }
