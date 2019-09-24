@@ -48,7 +48,7 @@ const ROLES = [ // {id, lowBound, highBound}
   
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
-const USERSTRING_REGEX = /^[\S]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
+const USERSTRING_REGEX = /^[\S ]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '532907700326105108';
 const LEADERBOARD_CHANNEL_ID = '623466100637696001';
 const LEADERBOARD_MESSAGE_ID = '623471149044596743';
@@ -213,7 +213,6 @@ function updateMemeCount(author, val) { // update #memes and lastmeme fields
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
   if (string.match(USERSTRING_REGEX) == null) return;
   var args = string.split('#');
-  console.log(args);
   var userObj = client.guilds.get(GUILD_ID).members.find((val) => {
     return val['user'].username.toLowerCase() == args[0].toLowerCase() && val['user'].discriminator == args[1];
   });
