@@ -319,18 +319,16 @@ function cmd_sendkarma(message) {
   args.pop();
   args.shift();
   args = args.join(' ');
-  console.log("u = " + args + " / args 2 = " + args_2);
   var reciever_userObj = findUser(args);
+  if (reciever_userObj == null) { // didnt find
+    message.channel.send('_Couldn\'t find ' + args + '._');
+    return;
+  }
   initUser(message.author).then(init1_res => {
     initUser(reciever_userObj).then(init2_res => {
-      if (reciever_userObj == null) { // didnt find
-        message.channel.send('_Couldn\'t find ' + args + '._');
-        return;
-      } else {
-        var amount = args_2;
-        sendKarma(message.author, reciever_userObj, amount);
-        message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
-      }
+      var amount = args_2;
+      sendKarma(message.author, reciever_userObj, amount);
+      message.channel.send('***' + message.author.username + '#' + message.author.discriminator + '*** _sent_ ***' + amount + '*** _karma to_ ***' + reciever_userObj.username + '#' + reciever_userObj.discriminator + '***_._'); 
     });
   });
 }
