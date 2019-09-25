@@ -170,7 +170,7 @@ function sendKarma(sender, reciever, amount, fromMeme, message) { // if fromMeme
         updateLeaderboard();
         updateTransactions(sender, reciever, amount, fromMeme);
         if (fromMeme!==undefined) {
-          updateMemeTable(message, VOTE.value, (fromMeme==1));
+          updateMemeTable(message, amount, (fromMeme==1));
           if (message !== undefined && amount > 0) {
             if (!isMeme(message)) {// we didnt count as meme before
               var iter = message.reactions.values();
