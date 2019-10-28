@@ -236,6 +236,7 @@ function updateLeaderboard() {
       var f = '';
       if (i < res.rows.length) {
         var u = getUserFromUid(res.rows[i].uid);
+        if (u === undefined) continue;
         var kpm = res.rows[i].karmafrommemes / res.rows[i].memes;
         var s = kpm - res.rows[i].downvotes/AAKPM_DOWNVOTE_COEFF;
         v += '__' + u.username + '#' + u.discriminator + '__ ['+ (Math.round(s * 100)/100) + ']';
