@@ -220,7 +220,9 @@ function findUser(string) { // searches for user by username#discrim and returns
 }
 
 function getUserFromUid(uid) {
-  return client.guilds.get(GUILD_ID).members.get(uid).user; 
+  var a = client.guilds.get(GUILD_ID).members.get(uid);
+  if (a === undefined) return undefined;
+  else return a.user; 
 }
 
 function updateLeaderboard() {
