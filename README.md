@@ -25,7 +25,7 @@ _All karma sent by reacting on a meme is reversible simply by unreacting_
 Leaderboard position is not just based on karma. In my opinion, this was a flaw with the original Cummy which promoted spamming memes. Position is now determined by average karma per meme, number of memes posted, and how long ago the person last posted a meme. More concretely:
 
 1. _Only people who posted in the last 7 days appear on the leaderboard._
-2. _Only people who have posted 5+ memes (total) appear on the leaderboard._
+2. _Only people who have posted 50+ memes (total) appear on the leaderboard._
 3. _People who meet conditions 1. and 2. are then ordered by `A = a-(d/10)` (A = adjusted average karma per meme) where a is avg. kpm and d is downvotes._
 4. _Number of Meme of the Day / Meme of the Week awards does not influence position on the leaderboard._
 
