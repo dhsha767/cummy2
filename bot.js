@@ -18,12 +18,12 @@ const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'Gloria\'s sextape'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
-  {name:'downvote', id:'', value:-1, isDefault:true},
-  {name:'upvote_1', id:'', value:1, isDefault:true},
-  {name:'upvote_10', id:'', value:10, isDefault:false},
-  {name:'upvote_25', id:'', value:25, isDefault:false},
-  {name:'upvote_50', id:'', value:50, isDefault:false},
-  {name:'upvote_100', id:'', value:100, isDefault:false}
+  {name:'downvote', id:'664412644979245066', value:-1, isDefault:true},
+  {name:'upvote_1', id:'664412645092360192', value:1, isDefault:true},
+  {name:'upvote_10', id:'664412645285298176', value:10, isDefault:false},
+  {name:'upvote_25', id:'664412645302206504', value:25, isDefault:false},
+  {name:'upvote_50', id:'664412645524242432', value:50, isDefault:false},
+  {name:'upvote_100', id:'664412646375817227', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMAND_NOT_MEME = COMMAND_PREFIX + "nm"; // ignore this message
