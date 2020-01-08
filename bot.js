@@ -50,14 +50,14 @@ const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+
 const USERSTRING_REGEX = /^[\S ]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
 const GUILD_ID = '663810047230345229';
 const LEADERBOARD_CHANNEL_ID = '664405129491120151';
-const LEADERBOARD_MESSAGE_ID = '';
+const LEADERBOARD_MESSAGE_ID = '664408545852129281';
 const LEADERBOARD_MAX_COUNT = 10;
 const LEADERBOARD_MAX_TIME_SINCE_LAST_MEME = 7 * 24 * 60 * 60 * 1000; // 7 days
 const LEADERBOARD_MIN_MEMES = 50;
 const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
 const TRANSACTIONS_CHANNEL_ID = '664405145974603776';
-const TRANSACTIONS_MESSAGE_ID = '';
-const TRANSACTIONS_MESSAGE_JSON_ID = '';
+const TRANSACTIONS_MESSAGE_ID = '664408519679672330';
+const TRANSACTIONS_MESSAGE_JSON_ID = '664408532833140747';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
 const MOTWD_CHANNEL_ID = '664405449638019072';
 const MOTWD_RESET_TIME = [1, 0, 0]; // day, hours, minutes [0-sunday -> 6-saturday]
