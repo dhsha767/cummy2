@@ -65,7 +65,7 @@ const OWNER_ID = '364289961567977472'; // bmdyy#0068
 const STARTING_KARMA = 1000; // how much to start everyone with
 var INITIALIZED_USERS = []; // keep track of users we know are registered, to avoid unecessary sql queries (until next restart of course)
 var BLACKLIST = ['607986239307644931']; // ignore these users
-var NON_MEME_CHANNELS = ['663815098212679680','663817710131740714', '663821500482191400']; // these are non meme channels
+var NON_MEME_CHANNELS = ['663821500482191400','663815098212679680']; // these are non meme channels
 var NON_MEME_USERS = ['570371927399727104'];
 var NON_EMBED_USERS = ['570371927399727104'];
 
