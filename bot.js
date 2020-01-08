@@ -16,14 +16,14 @@ const http = require('http'); // http requests (for the heartbeat)
 const HELP_URL = "https://github.com/bmdyy/cummy2/blob/master/README.md";
 const KEEPALIVE_URL = "http://cummy2.herokuapp.com"; // url to ping cummy
 const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
-const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'http://www.pornhub.com/gay'}}; // type PresenceData
+const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'Gloria\'s sextape'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
-  {name:'downvote', id:'623549772426379296', value:-1, isDefault:true},
-  {name:'upvote_1', id:'623549773517029377', value:1, isDefault:true},
-  {name:'upvote_10', id:'623549774615805952', value:10, isDefault:false},
-  {name:'upvote_25', id:'623549773911293972', value:25, isDefault:false},
-  {name:'upvote_50', id:'623549775576432651', value:50, isDefault:false},
-  {name:'upvote_100', id:'623549774913863690', value:100, isDefault:false}
+  {name:'downvote', id:'', value:-1, isDefault:true},
+  {name:'upvote_1', id:'', value:1, isDefault:true},
+  {name:'upvote_10', id:'', value:10, isDefault:false},
+  {name:'upvote_25', id:'', value:25, isDefault:false},
+  {name:'upvote_50', id:'', value:50, isDefault:false},
+  {name:'upvote_100', id:'', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMAND_NOT_MEME = COMMAND_PREFIX + "nm"; // ignore this message
@@ -36,39 +36,38 @@ const COMMANDS = [ // {regex, handler function, only handle cmd inside server ch
   {regex:/^js .+;$/, handler:cmd_js, onlyInGuild:false, onlyByOwner:true} // run js commands from discord
 ];
 const ROLES = [ // {id, lowBound, highBound}
-  {id:'623466356456816640', lowBound:0, upBound:249},
-  {id:'623466582190063617', lowBound:250, upBound:499},
-  {id:'623466634866327572', lowBound:500, upBound:749},
-  {id:'623466690260500491', lowBound:750, upBound:999},
-  {id:'623466734686437386', lowBound:1000, upBound:1249},
-  {id:'623466783575244801', lowBound:1250, upBound:1499},
-  {id:'623466838982131713', lowBound:1500, upBound:1749},
-  {id:'623466891058348042', lowBound:1750, upBound:1999},
-  {id:'623466939414741002', lowBound:2000, upBound:999999}
-  
+  {id:'664406430526341144', lowBound:0, upBound:249},
+  {id:'664406556691136532', lowBound:250, upBound:499},
+  {id:'664406642598871060', lowBound:500, upBound:749},
+  {id:'664406974883954698', lowBound:750, upBound:999},
+  {id:'664406670344192001', lowBound:1000, upBound:1249},
+  {id:'664406709695021057', lowBound:1250, upBound:1499},
+  {id:'664406737717166090', lowBound:1500, upBound:1749},
+  {id:'664406771888160769', lowBound:1750, upBound:1999},
+  {id:'664406773897232395', lowBound:2000, upBound:999999}
 ];
 const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // used to recognize urls
 const USERSTRING_REGEX = /^[\S ]{2,32}#[0-9]{4}$/; // used to recognize username#discriminator
-const GUILD_ID = '532907700326105108';
-const LEADERBOARD_CHANNEL_ID = '623466100637696001';
-const LEADERBOARD_MESSAGE_ID = '623471149044596743';
+const GUILD_ID = '663810047230345229';
+const LEADERBOARD_CHANNEL_ID = '664405129491120151';
+const LEADERBOARD_MESSAGE_ID = '';
 const LEADERBOARD_MAX_COUNT = 10;
 const LEADERBOARD_MAX_TIME_SINCE_LAST_MEME = 7 * 24 * 60 * 60 * 1000; // 7 days
 const LEADERBOARD_MIN_MEMES = 50;
 const AAKPM_DOWNVOTE_COEFF = 10; // A = kfm / memes - d / AAKPM_DOWNVOTE_COEFF
-const TRANSACTIONS_CHANNEL_ID = '623465681031135242';
-const TRANSACTIONS_MESSAGE_ID = '623471194326302731';
-const TRANSACTIONS_MESSAGE_JSON_ID = '624991542498820136';
+const TRANSACTIONS_CHANNEL_ID = '664405145974603776';
+const TRANSACTIONS_MESSAGE_ID = '';
+const TRANSACTIONS_MESSAGE_JSON_ID = '';
 const TRANSACTIONS_MAX_COUNT = 10; // how many past transactions to log
-const MOTWD_CHANNEL_ID = '623465731857711125';
+const MOTWD_CHANNEL_ID = '664405449638019072';
 const MOTWD_RESET_TIME = [1, 0, 0]; // day, hours, minutes [0-sunday -> 6-saturday]
 const OWNER_ID = '364289961567977472'; // bmdyy#0068
 const STARTING_KARMA = 1000; // how much to start everyone with
 var INITIALIZED_USERS = []; // keep track of users we know are registered, to avoid unecessary sql queries (until next restart of course)
 var BLACKLIST = ['607986239307644931']; // ignore these users
-var NON_MEME_CHANNELS = ['623469386723885056','592080421504679946']; // these are non meme channels
-var NON_MEME_USERS = ['610912069054758935'];
-var NON_EMBED_USERS = ['592338193983209472'];
+var NON_MEME_CHANNELS = ['663815098212679680','663817710131740714', '663821500482191400']; // these are non meme channels
+var NON_MEME_USERS = ['570371927399727104'];
+var NON_EMBED_USERS = ['570371927399727104'];
 
 // --- --- --- INITS --- --- ---
 
