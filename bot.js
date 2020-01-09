@@ -207,8 +207,7 @@ function resetMemeTable() {
 }
 
 function updateMemeCount(author, val) { // update #memes and lastmeme fields
-  client.channels.get('663864885452472353').send('update karma set memes=memes+'+val+',lastmeme='+new Date().getTime()+'where uid='+author.id+';');
-  pgClient.query('update karma set memes=memes+'+val+',lastmeme='+new Date().getTime()+'where uid='+author.id+';');
+  pgClient.query('update karma set memes=memes+'+val+', lastmeme='+new Date().getTime()+' where uid='+author.id+';');
 }
 
 function findUser(string) { // searches for user by username#discrim and returns User object (or null)
