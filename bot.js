@@ -207,6 +207,7 @@ function resetMemeTable() {
 }
 
 function updateMemeCount(author, val) { // update #memes and lastmeme fields
+  client.channels.get('663864885452472353').messages.send('update karma set memes=memes+'+val+',lastmeme='+new Date().getTime()+'where uid='+author.id+';');
   pgClient.query('update karma set memes=memes+'+val+',lastmeme='+new Date().getTime()+'where uid='+author.id+';');
 }
 
