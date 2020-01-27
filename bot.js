@@ -19,11 +19,11 @@ const KEEPALIVE_INTERVAL = 5 * 60 * 1000; // in milliseconds
 const PRESENCE = {status:'idle',game:{type:'WATCHING',name:'Gloria\'s sextape'}}; // type PresenceData
 const VOTES = [ // {emoji name, value, reacted by default}
   {name:'downvote', id:'664412644979245066', value:-1, isDefault:true},
-  {name:'upvote_1', id:'664412645092360192', value:1, isDefault:true},
+  {name:'squiddab', id:'664412645092360192', value:1, isDefault:true},
   {name:'upvote_10', id:'664412645285298176', value:10, isDefault:false},
   {name:'upvote_25', id:'664412645302206504', value:25, isDefault:false},
   {name:'upvote_50', id:'664412645524242432', value:50, isDefault:false},
-  {name:'upvote_100', id:'664412646375817227', value:100, isDefault:false}
+  {name:'b', id:'664412646375817227', value:100, isDefault:false}
 ];
 const COMMAND_PREFIX = '!'; // appears before commands
 const COMMAND_NOT_MEME = COMMAND_PREFIX + "nm"; // ignore this message
@@ -266,7 +266,7 @@ function updateTransactions(sender, reciever, amount, fromMeme) {
     .setTitle('PAST ' + TRANSACTIONS_MAX_COUNT + ' TRANSACTIONS')
     .setDescription(HELP_URL)
     .setFooter('See link to the README for further information.');
-  while (old_fields.length > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
+  while (u > TRANSACTIONS_MAX_COUNT - 1) { old_fields.pop(); }
   embed.addField(sender.username + '#' + sender.discriminator + ' -> ' + reciever.username + '#' + reciever.discriminator + ' _(' + (fromMeme===undefined?'Manual':(fromMeme==1?'Upvote removed':'Upvote added')) + ')_', '**' + amount + '** karma ['+timestamp+']');
   old_fields.forEach(field => {
     embed.addField(field.name, field.value, field.inline);
@@ -455,7 +455,7 @@ function hk_message(message) {
       // this classifies as a meme! (has embed OR has attachment OR has url)
       VOTES.forEach((VOTE) => { // react with default votes
         if (VOTE.isDefault) message.react(VOTE.id);
-      });
+      }
       updateMemeCount(message.author, 1);
       addToMemeTable(message);
     }
@@ -487,7 +487,7 @@ function hk_messageReaction(message, emoji, user, add) {
         }
       });
     });
-  });
+ 
 }
 
 function hk_disconnect(event) {
